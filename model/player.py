@@ -18,6 +18,9 @@ class Player:
     def get_card_names(self):
         return [card.name for card in self.cards]
 
+    def new_card(self, card):
+        self.cards.append(card)
+
 class Bank(Player):
 
     def get_card_names(self):

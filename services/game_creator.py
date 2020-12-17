@@ -16,7 +16,8 @@ class GameCreator:
 
     def _deal_cards_to_player(self, player):
         for i in range(2):
-            player.recive_card(self.deck.get_card())
+            card = self.deck.get_card()
+            player.recive_card(card)
 
     def _get_game_info(self):
         return {
