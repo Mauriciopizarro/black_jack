@@ -10,5 +10,6 @@ if __name__ == '__main__':
     player_name = input('Select your nickname : ')
     game_manager = GameManager(player_name)
     response = game_manager.start_game()
-    print(f'Player {player_name} cards: {response.get("player")}')
-    print(f'Croupier cards: {response.get("croupier")}')
+    print(f'Player {response.get("player").get("name")} cards: {response.get("player")}')
+    print(f'Player {response.get("croupier").get("name")} cards: {response.get("croupier")}')
+

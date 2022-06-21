@@ -13,6 +13,14 @@ class Player:
     def get_cards_values(self):
         return [card.value for card in self.cards]
 
+    def get_total_points(self):
+        total_points = 0
+
+        for card in self.cards:
+            total_points += card.value
+
+        return total_points
+
 
 class Croupier(Player):
     def __init__(self, *args):
@@ -20,14 +28,16 @@ class Croupier(Player):
         self.has_hidden_card = True
 
     def get_cards_values(self):
-        if not self.has_hidden_card:
-            return [str(card.value) for card in self.cards]
+        cards_values = super(Croupier, self).get_cards_values()
+        if self.has_hidden_card:
+            cards_values[1] = 'hidden card'
 
-        card_values = []
+        return cards_values
+    
+    def get_total_points(self):
+        total_points = super(Croupier, self).get_total_points()
+        if self.has_hidden_card:
+            total_points -= self.cards[1].value
 
-        for card in self.cards:
-            card_values.append(str(card.value))
+        return total_points
 
-        card_values[1] = 'hidden card'
-
-        return card_values

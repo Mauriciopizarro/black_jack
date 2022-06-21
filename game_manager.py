@@ -13,5 +13,5 @@ class GameManager:
         player2_cards = self.deck_manager.get_cards(2)
         self.player_manager.deal_cards_to_players(player1_cards, player2_cards)
 
-        response = self.player_manager.get_current_cards()
+        response = self.player_manager.get_players_status()
         return response
