@@ -40,4 +40,3 @@ class Croupier(Player):
             total_points -= self.cards[1].value
 
         return total_points
-

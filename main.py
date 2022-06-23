@@ -9,7 +9,13 @@ if __name__ == '__main__':
 
     player_name = input('Select your nickname : ')
     game_manager = GameManager(player_name)
-    response = game_manager.start_game()
-    print(f'Player {response.get("player").get("name")} cards: {response.get("player")}')
-    print(f'Player {response.get("croupier").get("name")} cards: {response.get("croupier")}')
+    game_manager.start_game()
 
+    not_stand = True
+
+    while not_stand:
+        selection = input("Choose your next step. Please, if you wanna other card, type 'other_card' else, type 'stand': ")
+        game_manager.choise_next_step(selection)
+
+        if selection == "stand":
+            not_stand = False
