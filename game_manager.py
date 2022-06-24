@@ -5,8 +5,6 @@ from player_manager import PlayerManager
 
 class GameManager:
 
-    current_turn = "player"
-
     def __init__(self, player_name):
         self.deck_manager = DeckManager()
         self.player_manager = PlayerManager(player_name)
@@ -31,7 +29,29 @@ class GameManager:
             return response
 
     def stand_and_change_turn(self):
+        self.player_manager.player_1.stand = True
         if self.player_manager.croupier.has_hidden_card:
             self.player_manager.expose_croupier_hidden_card()
             response = self.player_manager.get_players_status()
             return response
+
+    def check_winner(self):
+        croupier_points = self.player_manager.get_players_status().get("croupier").get("total_points")
+        player_points = self.player_manager.get_players_status().get("player").get("total_points")
+
+        if 21 > croupier_points > player_points:
+            if self.player_manager.player_1.is_stand():
+                return "croupier_wins"
+
+        elif 21 > player_points > croupier_points:
+            if self.player_manager.croupier.is_stand():
+                return "player_wins"
+
+        elif croupier_points > 21:
+            return "player_wins"
+
+        elif player_points > 21:
+            return "croupier_wins"
+
+        elif croupier_points == 21 and self.player_manager.player_1.is_stand():
+            return "croupier_wins"

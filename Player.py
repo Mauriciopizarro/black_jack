@@ -1,10 +1,9 @@
-from Card import *
-
 
 class Player:
 
     def __init__(self, name):
         self.cards = []
+        self.stand = False
         self.name = name
 
     def recive_cards(self, new_cards):
@@ -20,6 +19,9 @@ class Player:
             total_points += card.value
 
         return total_points
+
+    def is_stand(self):
+        return self.stand
 
 
 class Croupier(Player):
