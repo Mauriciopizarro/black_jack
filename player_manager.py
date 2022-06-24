@@ -12,7 +12,7 @@ class PlayerManager:
         self.croupier.recive_cards(cards_to_player_2)
 
     def get_players_status(self):
-        return {
+        player_status_json = {
             'player': {
                 'name': self.player_1.name,
                 'cards': self.player_1.get_cards_values(),
@@ -24,3 +24,8 @@ class PlayerManager:
                 'total_points': self.croupier.get_total_points()
             }
         }
+
+        return player_status_json
+
+    def expose_croupier_hidden_card(self):
+        self.croupier.has_hidden_card = False
