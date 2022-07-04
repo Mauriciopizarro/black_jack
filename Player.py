@@ -1,11 +1,11 @@
-from Card import *
-
 
 class Player:
 
     def __init__(self, name):
         self.cards = []
+        self.__stand = False
         self.name = name
+        self.__game_over = False
 
     def recive_cards(self, new_cards):
         self.cards.extend(new_cards)
@@ -15,11 +15,21 @@ class Player:
 
     def get_total_points(self):
         total_points = 0
-
         for card in self.cards:
             total_points += card.value
-
         return total_points
+
+    def is_stand(self):
+        return self.__stand
+
+    def stand(self):
+        self.__stand = True
+
+    def game_over(self):
+        self.__game_over = True
+
+    def is_game_over(self):
+        return self.__game_over
 
 
 class Croupier(Player):
@@ -38,5 +48,4 @@ class Croupier(Player):
         total_points = super(Croupier, self).get_total_points()
         if self.has_hidden_card:
             total_points -= self.cards[1].value
-
         return total_points
