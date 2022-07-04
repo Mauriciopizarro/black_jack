@@ -1,6 +1,7 @@
 
 from Player import Player, Croupier
 from deck import Deck
+from deck_repository import DeckRepository
 
 
 class GameService:
@@ -8,7 +9,7 @@ class GameService:
     turn_position = 0
 
     def __init__(self):
-        self.deck = Deck()
+        self.deck_repository = DeckRepository.get_instance()
         self.player_1 = None
         self.croupier = Croupier()
 
@@ -17,14 +18,17 @@ class GameService:
         self.croupier.recive_cards(cards_to_player_2)
 
     def start_game(self, player_name): #deal cards and return current cards and points
+        deck = Deck()
+        self.deck_repository.save(deck)
         self.player_1 = Player(player_name)
-        player1_cards = self.deck.get_cards(2)
-        croupier_cards = self.deck.get_cards(2)
+        player1_cards = deck.get_cards(2)
+        croupier_cards = deck.get_cards(2)
         self.deal_initial_cards_to_players(player1_cards, croupier_cards)
 
     def deal_card(self):
         player_name = self.turn_order[self.turn_position]
-        card = self.deck.get_cards(1)
+        deck = self.deck_repository.get()
+        card = deck.get_cards(1)
         if player_name == 'player':
             self.player_1.recive_cards(card)
         else:
