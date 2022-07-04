@@ -3,15 +3,16 @@ from Player import Player, Croupier
 from deck import Deck
 from deck_repository import DeckRepository
 from player_repository import PlayerRepository
+from turn import Turn
+from turn_repository import TurnRepository
 
 
 class GameService:
-    turn_order = ['player', 'croupier']
-    turn_position = 0
 
     def __init__(self):
         self.deck_repository = DeckRepository.get_instance()
         self.player_repository = PlayerRepository.get_instance()
+        self.turn_repository = TurnRepository.get_instance()
 
     def deal_initial_cards_to_players(self, cards_to_player_1, cards_to_player_2):
         player_1 = self.player_repository.get_player()
@@ -20,6 +21,8 @@ class GameService:
         croupier.recive_cards(cards_to_player_2)
 
     def start_game(self, player_name): #deal cards and return current cards and points
+        turn = Turn()
+        self.turn_repository.save(turn)
         deck = Deck()
         self.deck_repository.save(deck)
         player_1 = Player(player_name)
@@ -31,10 +34,11 @@ class GameService:
         self.deal_initial_cards_to_players(player1_cards, croupier_cards)
 
     def deal_card(self):
-        player_name = self.turn_order[self.turn_position]
+        turn = self.turn_repository.get()
+        current_turn = turn.get_current_turn()
         deck = self.deck_repository.get()
         card = deck.get_cards(1)
-        if player_name == 'player':
+        if current_turn == 'player':
             player_1 = self.player_repository.get_player()
             player_1.recive_cards(card)
         else:
@@ -42,11 +46,12 @@ class GameService:
             croupier.recive_cards(card)
 
     def stand(self):
-        player_name = self.turn_order[self.turn_position]
-        if player_name == 'player':
+        turn = self.turn_repository.get()
+        current_turn = turn.get_current_turn()
+        if current_turn == 'player':
             player_1 = self.player_repository.get_player()
             player_1.stand()
-        self.turn_position += 1
+        turn.change_turn()
 
     def get_players_status(self):
         player_1 = self.player_repository.get_player()
