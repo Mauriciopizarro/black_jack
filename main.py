@@ -6,9 +6,20 @@ import colorama
 
 from colorama import Fore
 from colorama import Style
-from game_service import GameService
 
-game_service = GameService()
+from services.start_game_service import StartGameService
+from services.deal_card_service import DealCardService
+from services.stand_service import StandService
+from services.get_status_service import GetStatusService
+from services.check_game_over_service import CheckGameOverService
+from services.croupier_service import CroupierService
+
+croupier_service = CroupierService()
+start_game_service = StartGameService()
+deal_card_service = DealCardService()
+stand_service = StandService()
+get_status_service = GetStatusService()
+check_game_over_service = CheckGameOverService()
 colorama.init()
 
 
@@ -26,33 +37,33 @@ def print_game_status(status):
 
 
 def get_current_cards_and_points():
-    response = game_service.get_players_status()
+    response = get_status_service.get_players_status()
     print(Fore.CYAN + Style.DIM + f'Player {response.get("player").get("name")} cards: {response.get("player").get("cards")} total points = {response.get("player").get("total_points")}' + Style.RESET_ALL)
     print(Fore.CYAN + Style.DIM + f'{response.get("croupier").get("name")} cards: {response.get("croupier").get("cards")} total points = {response.get("croupier").get("total_points")}' + Style.RESET_ALL)
 
 
 def start_game():
     player_name = input(Fore.WHITE + Style.DIM + 'Select your nickname : ' + Style.RESET_ALL)
-    game_service.start_game(player_name)
+    start_game_service.start_game(player_name)
     get_current_cards_and_points()
 
 
 def player_play():
     selection = get_player_selection()
     while selection == "other_card":
-        game_service.deal_card()
+        deal_card_service.deal_card()
         get_current_cards_and_points()
-        status = game_service.check_game_over()
+        status = check_game_over_service.check_game_over()
         if status is not None:
             print_game_status(status)
             quit()
         if status is None:
             selection = get_player_selection()
-    game_service.stand()
+    stand_service.stand()
 
 
 def croupier_play():
-    status = game_service.croupier_play()
+    status = croupier_service.croupier_play()
     get_current_cards_and_points()
     print_game_status(status)
 
