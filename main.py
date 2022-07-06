@@ -11,7 +11,6 @@ from services.start_game_service import StartGameService
 from services.deal_card_service import DealCardService
 from services.stand_service import StandService
 from services.get_status_service import GetStatusService
-from services.check_game_over_service import CheckGameOverService
 from services.croupier_service import CroupierService
 
 croupier_service = CroupierService()
@@ -19,55 +18,73 @@ start_game_service = StartGameService()
 deal_card_service = DealCardService()
 stand_service = StandService()
 get_status_service = GetStatusService()
-check_game_over_service = CheckGameOverService()
 colorama.init()
 
 
 def get_player_selection():
-    selection = input("Choose your next step. if you wanna other card, please type 'other_card' else, type 'stand': ")
+    selection = input(
+        "Choose your next step. if you wanna other card, please type 'other_card' else, type 'stand': "
+    )
     return selection
 
 
-def print_game_status(status):
-    if status.get("player").get("game_over_status"):
-        return print(Fore.RED + Style.DIM + f'{status.get("player").get("name")} loose, Croupier win the round' + Style.RESET_ALL)
-
-    if status.get("croupier").get("game_over_status"):
-        return print(Fore.RED + Style.DIM + f'{status.get("player").get("name")} win the round' + Style.RESET_ALL)
+def print_game_status(status_response):
+    for player, status in status_response.items():
+        status_text = format_status(status)
+        print_with_style(status_text)
 
 
-def get_current_cards_and_points():
-    response = get_status_service.get_players_status()
-    print(Fore.CYAN + Style.DIM + f'Player {response.get("player").get("name")} cards: {response.get("player").get("cards")} total points = {response.get("player").get("total_points")}' + Style.RESET_ALL)
-    print(Fore.CYAN + Style.DIM + f'{response.get("croupier").get("name")} cards: {response.get("croupier").get("cards")} total points = {response.get("croupier").get("total_points")}' + Style.RESET_ALL)
+def format_status(status):
+    player_text = f'Player Name {status.get("name")} '
+    player_text += f'cards: {status.get("cards")} '
+    player_text += f'total points = {status.get("total_points")}'
+    return player_text
+
+
+def print_with_style(text):
+    print(Fore.CYAN + Style.DIM + text + Style.RESET_ALL)
 
 
 def start_game():
     player_name = input(Fore.WHITE + Style.DIM + 'Select your nickname : ' + Style.RESET_ALL)
     start_game_service.start_game(player_name)
-    get_current_cards_and_points()
 
 
-def player_play():
-    selection = get_player_selection()
-    while selection == "other_card":
-        deal_card_service.deal_card()
-        get_current_cards_and_points()
-        status = check_game_over_service.check_game_over()
-        if status is not None:
-            print_game_status(status)
-            quit()
-        if status is None:
-            selection = get_player_selection()
-    stand_service.stand()
+def is_game_finished(status_response):
+    for player, status in status_response.items():
+        if status.get('status') == 'winner':
+            return True
+
+    return False
 
 
-def croupier_play():
-    status = croupier_service.croupier_play()
-    get_current_cards_and_points()
-    print_game_status(status)
+def print_winner_text(status):
+    is_player_winner = status.get("player").get("status") == 'winner'
+    is_croupier_winner = status.get("croupier").get("status") == 'winner'
+    if is_player_winner and is_croupier_winner:
+        print(Fore.YELLOW + Style.DIM + 'Tied game')
+    elif is_player_winner:
+        print(Fore.GREEN + Style.DIM + 'The player won')
+    elif is_croupier_winner:
+        print(Fore.RED + Style.DIM + 'The croupier won')
+
+
+def play():
+    response = get_status_service.get_players_status()
+    print_game_status(response)
+    while not is_game_finished(response):
+        selection = get_player_selection()
+        if selection == "other_card":
+            deal_card_service.deal_card()
+        else:
+            stand_service.stand()
+            croupier_service.croupier_play()
+        response = get_status_service.get_players_status()
+        print_game_status(response)
+
+    print_winner_text(response)
+    quit()
 
 
 start_game()
-player_play()
-croupier_play()
+play()

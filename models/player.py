@@ -3,9 +3,10 @@ class Player:
 
     def __init__(self, name):
         self.cards = []
-        self.__stand = False
         self.name = name
-        self.__game_over = False
+        self.__stand = False
+        self.__is_winner = False
+        self.__is_looser = False
 
     def recive_cards(self, new_cards):
         self.cards.extend(new_cards)
@@ -25,11 +26,32 @@ class Player:
     def stand(self):
         self.__stand = True
 
-    def game_over(self):
-        self.__game_over = True
+    def set_as_winner(self):
+        self.__is_winner = True
 
-    def is_game_over(self):
-        return self.__game_over
+    def set_as_looser(self):
+        self.__is_looser = True
+
+    def is_over_limit(self):
+        points = self.get_total_points()
+        if points > 21:
+            return True
+        return False
+
+    def get_status(self):
+        status = 'playing'
+        if self.__is_looser:
+            status = 'looser'
+        if self.__is_winner:
+            status = 'winner'
+
+        return {
+            'name': self.name,
+            'cards': self.get_cards_values(),
+            'total_points': self.get_total_points(),
+            'status': status,
+            'is_stand': self.is_stand()
+        }
 
 
 class Croupier(Player):
