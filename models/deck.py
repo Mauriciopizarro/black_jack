@@ -1,62 +1,62 @@
 import random
-from models.card import Card
+from models.card import Card, As, LetterCard, NumberCard
 
 
 class Deck:
     def __init__(self):
         self.cards = [
-            Card(11), #As
-            Card(11), #As
-            Card(1),  #As
-            Card(1),  #As
-            Card(10), #J
-            Card(10), #J
-            Card(10), #J
-            Card(10), #J
-            Card(10), #Q
-            Card(10), #Q
-            Card(10), #Q
-            Card(10), #Q
-            Card(10), #K
-            Card(10), #K
-            Card(10), #K
-            Card(10), #K
-            Card(2),
-            Card(2),
-            Card(2),
-            Card(2),
-            Card(3),
-            Card(3),
-            Card(3),
-            Card(3),
-            Card(4),
-            Card(4),
-            Card(4),
-            Card(4),
-            Card(5),
-            Card(5),
-            Card(5),
-            Card(5),
-            Card(6),
-            Card(6),
-            Card(6),
-            Card(6),
-            Card(7),
-            Card(7),
-            Card(7),
-            Card(7),
-            Card(8),
-            Card(8),
-            Card(8),
-            Card(8),
-            Card(9),
-            Card(9),
-            Card(9),
-            Card(9),
-            Card(10),
-            Card(10),
-            Card(10),
-            Card(10),
+            As(), #As
+            As(), #As
+            As(),  #As
+            As(),  #As
+            LetterCard('J'), #J
+            LetterCard('J'), #J
+            LetterCard('J'), #J
+            LetterCard('J'), #J
+            LetterCard('Q'), #Q
+            LetterCard('Q'), #Q
+            LetterCard('Q'), #Q
+            LetterCard('Q'), #Q
+            LetterCard('K'), #K
+            LetterCard('K'), #K
+            LetterCard('K'), #K
+            LetterCard('K'), #K
+            NumberCard(2),
+            NumberCard(2),
+            NumberCard(2),
+            NumberCard(2),
+            NumberCard(3),
+            NumberCard(3),
+            NumberCard(3),
+            NumberCard(3),
+            NumberCard(4),
+            NumberCard(4),
+            NumberCard(4),
+            NumberCard(4),
+            NumberCard(5),
+            NumberCard(5),
+            NumberCard(5),
+            NumberCard(5),
+            NumberCard(6),
+            NumberCard(6),
+            NumberCard(6),
+            NumberCard(6),
+            NumberCard(7),
+            NumberCard(7),
+            NumberCard(7),
+            NumberCard(7),
+            NumberCard(8),
+            NumberCard(8),
+            NumberCard(8),
+            NumberCard(8),
+            NumberCard(9),
+            NumberCard(9),
+            NumberCard(9),
+            NumberCard(9),
+            NumberCard(10),
+            NumberCard(10),
+            NumberCard(10),
+            NumberCard(10),
         ]
 
         random.shuffle(self.cards)

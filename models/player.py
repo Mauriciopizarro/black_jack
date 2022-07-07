@@ -1,3 +1,5 @@
+from models.card import As
+
 
 class Player:
 
@@ -11,14 +13,31 @@ class Player:
     def recive_cards(self, new_cards):
         self.cards.extend(new_cards)
 
-    def get_cards_values(self):
-        return [card.value for card in self.cards]
+    def get_cards_symbols(self):
+        return [card.symbol for card in self.cards]
 
     def get_total_points(self):
+        total_point_list = self.get_possible_points()
+        return max(total_point_list)
+
+    def get_possible_points(self):
         total_points = 0
+        total_points_list = []
+        there_is_as = False
         for card in self.cards:
+            if isinstance(card, As):
+                there_is_as = True
             total_points += card.value
-        return total_points
+        total_points_list.append(total_points)
+
+        total_points_with_as = total_points + As.special_value
+        if there_is_as and total_points_with_as <= 21:
+            total_points_list.append(total_points_with_as)
+
+        if 21 in total_points_list:
+            total_points_list = [21]
+
+        return total_points_list
 
     def is_stand(self):
         return self.__stand
@@ -47,8 +66,8 @@ class Player:
 
         return {
             'name': self.name,
-            'cards': self.get_cards_values(),
-            'total_points': self.get_total_points(),
+            'cards': self.get_cards_symbols(),
+            'total_points': self.get_possible_points(),
             'status': status,
             'is_stand': self.is_stand()
         }
@@ -59,15 +78,18 @@ class Croupier(Player):
         super(Croupier, self).__init__('Croupier')
         self.has_hidden_card = True
 
-    def get_cards_values(self):
-        cards_values = super(Croupier, self).get_cards_values()
+    def get_cards_symbols(self):
+        cards_values = super(Croupier, self).get_cards_symbols()
         if self.has_hidden_card:
             cards_values[1] = 'hidden card'
 
         return cards_values
-    
-    def get_total_points(self):
-        total_points = super(Croupier, self).get_total_points()
-        if self.has_hidden_card:
-            total_points -= self.cards[1].value
-        return total_points
+
+    def get_possible_points(self):
+        if not self.has_hidden_card:
+            return super(Croupier, self).get_possible_points()
+
+        if isinstance(self.cards[0], As):
+            return [self.cards[0].value, self.cards[0].value + As.special_value]
+
+        return [self.cards[0].value]
