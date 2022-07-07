@@ -37,7 +37,11 @@ def print_game_status(status_response):
 def format_status(status):
     player_text = f'Player Name {status.get("name")} '
     player_text += f'cards: {status.get("cards")} '
-    player_text += f'total points = {status.get("total_points")}'
+    if len(status.get("total_points")) > 1:
+        total_points = f'{status.get("total_points")[0]} / {status.get("total_points")[1]}'
+    else:
+        total_points = f'{status.get("total_points")[0]}'
+    player_text += f'total points = {total_points}'
     return player_text
 
 
