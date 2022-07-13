@@ -1,7 +1,7 @@
 from repositories.deck_repository import DeckRepository
 from repositories.game_repository import GameRepository
 from repositories.player_repository import PlayerRepository
-from services.exceptions import NotCreatedGame
+from services.exceptions import NotCreatedGame, GameFinishedError
 
 
 class DealCardService:
@@ -18,13 +18,11 @@ class DealCardService:
         if not game:
             raise NotCreatedGame()
 
-        if player_1.is_stand():
-            raise StandPlayerCantReciveCardsError()
+        if game.is_finished():
+            raise GameFinishedError()
 
-        player_status = player_1.get_status().get('status')
-
-        if player_status == 'looser':
-            raise PlayerOverLimitDealCardError()
+        if not game.is_player_turn(player_1):
+            raise NotPlayerTurn()
 
         deck = self.deck_repository.get()
         card = deck.get_cards(1)
@@ -33,6 +31,7 @@ class DealCardService:
             croupier = self.player_repository.get_croupier()
             croupier.set_as_winner()
             player_1.set_as_looser()
+            game.end_game()
 
 
 class StandPlayerCantReciveCardsError(Exception):
@@ -40,4 +39,8 @@ class StandPlayerCantReciveCardsError(Exception):
 
 
 class PlayerOverLimitDealCardError(Exception):
+    pass
+
+
+class NotPlayerTurn(Exception):
     pass
