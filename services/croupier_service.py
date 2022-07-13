@@ -1,5 +1,6 @@
 from repositories.deck_repository import DeckRepository
 from repositories.player_repository import PlayerRepository
+from repositories.turn_repository import TurnRepository
 
 
 class CroupierService:
@@ -7,9 +8,10 @@ class CroupierService:
     def __init__(self):
         self.deck_repository = DeckRepository.get_instance()
         self.player_repository = PlayerRepository.get_instance()
+        self.turn_repository = TurnRepository.get_instance()
 
-    def is_there_winner(self, croupier):
-        player_1 = self.player_repository.get_player()
+    def is_there_winner(self, croupier, player_1):
+
         player_points = player_1.get_total_points()
         croupier_points = croupier.get_total_points()
 
@@ -31,9 +33,26 @@ class CroupierService:
         return False
 
     def croupier_play(self):
+        player_1 = self.player_repository.get_player()
         croupier = self.player_repository.get_croupier()
+        turn = self.turn_repository.get()
+
+        if not player_1.is_stand() or turn.get_current_turn() != 'croupier':
+            raise NotCroupierTurnError()
+
+        if croupier.get_status().get('status') != 'playing':
+            raise CroupierCantPlayFinishedGameError()
+
         croupier.has_hidden_card = False
-        while not self.is_there_winner(croupier):
+        while not self.is_there_winner(croupier, player_1):
             deck = self.deck_repository.get()
             card = deck.get_cards(1)
             croupier.recive_cards(card)
+
+
+class NotCroupierTurnError(Exception):
+    pass
+
+
+class CroupierCantPlayFinishedGameError(Exception):
+    pass
