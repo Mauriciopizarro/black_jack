@@ -1,5 +1,5 @@
-class TurnRepository:
-    turn = None
+class GameRepository:
+    game = None
     instance = None
 
     @classmethod
@@ -8,8 +8,8 @@ class TurnRepository:
             cls.instance = cls()
         return cls.instance
 
-    def save(self, turn):
-        self.turn = turn
+    def save(self, game):
+        self.game = game
 
     def get(self):
-        return self.turn
+        return self.game
