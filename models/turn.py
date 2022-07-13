@@ -9,3 +9,10 @@ class Turn:
 
     def change_turn(self):
         self.turn_position += 1
+
+    def get_number_of_players(self):
+        quantity_players = len(self.turn_order)
+        return quantity_players - 1
+
+    def get_turn_position(self):
+        return self.turn_position

@@ -1,6 +1,6 @@
 from flask import Flask
 
-from controllers.croupier_service_controller import CroupierPlayController
+from controllers.croupier_controller import CroupierPlayController
 from controllers.deal_card_controller import DealCardController
 from controllers.status_controller import StatusController
 from controllers.stand_controller import StandController

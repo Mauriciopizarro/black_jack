@@ -7,8 +7,8 @@ class Deck:
         self.cards = [
             As(), #As
             As(), #As
-            As(),  #As
-            As(),  #As
+            As(), #As
+            As(), #As
             LetterCard('J'), #J
             LetterCard('J'), #J
             LetterCard('J'), #J
