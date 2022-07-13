@@ -1,7 +1,7 @@
 from repositories.deck_repository import DeckRepository
 from repositories.player_repository import PlayerRepository
 from repositories.game_repository import GameRepository
-from services.exceptions import NotCreatedGame
+from services.exceptions import NotCreatedGame, GameFinishedError
 
 
 class CroupierService:
@@ -11,7 +11,7 @@ class CroupierService:
         self.player_repository = PlayerRepository.get_instance()
         self.game_repository = GameRepository.get_instance()
 
-    def is_there_winner(self, croupier, player_1):
+    def is_there_winner(self, croupier, player_1, game):
 
         player_points = player_1.get_total_points()
         croupier_points = croupier.get_total_points()
@@ -19,16 +19,19 @@ class CroupierService:
         if croupier.is_over_limit():
             player_1.set_as_winner()
             croupier.set_as_looser()
+            game.end_game()
             return True
 
         if croupier_points == player_points:
             player_1.set_as_winner()
             croupier.set_as_winner()
+            game.end_game()
             return True
 
         if croupier_points > player_points:
             croupier.set_as_winner()
             player_1.set_as_looser()
+            game.end_game()
             return True
 
         return False
@@ -41,14 +44,14 @@ class CroupierService:
         if not game:
             raise NotCreatedGame()
 
-        if not player_1.is_stand() or game.get_current_turn() != 'croupier':
+        if game.is_finished():
+            raise GameFinishedError()
+
+        if not game.is_player_turn(croupier):
             raise NotCroupierTurnError()
 
-        if croupier.get_status().get('status') != 'playing':
-            raise CroupierCantPlayFinishedGameError()
-
         croupier.has_hidden_card = False
-        while not self.is_there_winner(croupier, player_1):
+        while not self.is_there_winner(croupier, player_1, game):
             deck = self.deck_repository.get()
             card = deck.get_cards(1)
             croupier.recive_cards(card)

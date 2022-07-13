@@ -1,5 +1,5 @@
 from controllers.utils import ClientErrorResponse
-from services.exceptions import NotCreatedGame
+from services.exceptions import NotCreatedGame, GameFinishedError
 from services.stand_service import StandService, NoTurnsToStand
 from flask.views import View
 
@@ -22,6 +22,11 @@ class StandController(View):
             return ClientErrorResponse(
                 description='There is not game created',
                 code='NO_GAME_CRATED',
+            )
+        except GameFinishedError:
+            return ClientErrorResponse(
+                description='The game is finished',
+                code='GAME_FINISHED',
             )
 
         return {'message': "Stand"}
