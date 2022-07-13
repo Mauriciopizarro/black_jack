@@ -18,5 +18,3 @@ class Game:
 
     def is_finished(self):
         return self.game_status == "finished"
-
-    # mati coment
