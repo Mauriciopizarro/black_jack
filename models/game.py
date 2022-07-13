@@ -1,4 +1,4 @@
-class Turn:
+class Game:
 
     def __init__(self):
         self.turn_order = ['player', 'croupier']

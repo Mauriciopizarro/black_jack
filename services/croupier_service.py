@@ -1,6 +1,7 @@
 from repositories.deck_repository import DeckRepository
 from repositories.player_repository import PlayerRepository
-from repositories.turn_repository import TurnRepository
+from repositories.game_repository import GameRepository
+from services.exceptions import NotCreatedGame
 
 
 class CroupierService:
@@ -8,7 +9,7 @@ class CroupierService:
     def __init__(self):
         self.deck_repository = DeckRepository.get_instance()
         self.player_repository = PlayerRepository.get_instance()
-        self.turn_repository = TurnRepository.get_instance()
+        self.game_repository = GameRepository.get_instance()
 
     def is_there_winner(self, croupier, player_1):
 
@@ -35,9 +36,12 @@ class CroupierService:
     def croupier_play(self):
         player_1 = self.player_repository.get_player()
         croupier = self.player_repository.get_croupier()
-        turn = self.turn_repository.get()
+        game = self.game_repository.get()
 
-        if not player_1.is_stand() or turn.get_current_turn() != 'croupier':
+        if not game:
+            raise NotCreatedGame()
+
+        if not player_1.is_stand() or game.get_current_turn() != 'croupier':
             raise NotCroupierTurnError()
 
         if croupier.get_status().get('status') != 'playing':
