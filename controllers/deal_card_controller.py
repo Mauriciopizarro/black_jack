@@ -1,6 +1,5 @@
 from controllers.utils import ClientErrorResponse
-from services.deal_card_service import DealCardService, StandPlayerCantReciveCardsError, PlayerOverLimitDealCardError, \
-    NotPlayerTurn
+from services.deal_card_service import DealCardService, NotPlayerTurn, CroupierTurn
 from flask.views import View
 
 from services.exceptions import NotCreatedGame, GameFinishedError
@@ -29,5 +28,10 @@ class DealCardController(View):
                 description='Is not player turn',
                 code='ANOTHER_PLAYER_TURN',
             )
+        except CroupierTurn:
+            return ClientErrorResponse(
+                description='Is turn to croupier',
+                code='TURN_TO_CROUPIER',
+            )
 
-        return {'message': "Card deal!"}
+        return {'message': "Card dealed to player"}

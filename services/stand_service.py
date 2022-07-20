@@ -11,7 +11,8 @@ class StandService:
 
     def stand(self):
         game = self.game_repository.get()
-        player_1 = self.player_repository.get_player()
+        players = self.player_repository.get_players()
+        croupier = self.player_repository.get_croupier()
 
         if not game:
             raise NotCreatedGame()
@@ -19,15 +20,23 @@ class StandService:
         if game.is_finished():
             raise GameFinishedError()
 
-        if not game.is_player_turn(player_1):
+        if game.is_croupier_turn():
             raise NoTurnsToStand()
 
-        player_1.stand()
-        game.change_turn()
+        for player in players:
+            if str(player.player_id) == game.get_playerId_of_current_turn():
+                player.stand()
+                player.set_as_waiting_croupier()
+                game.change_turn()
+                break
+
+        for player in players:
+            if str(player.player_id) == game.get_playerId_of_current_turn():
+                player.set_as_playing()
+
+        if game.is_croupier_turn():
+            croupier.set_as_playing()
 
 
 class NoTurnsToStand(Exception):
     pass
-
-
-
