@@ -1,23 +1,9 @@
-
 # El objetivo es simple: ganarle al Croupier obteniendo el puntaje más cercano a 21.
 # Las figuras (el Valet, la Reina y el Rey) valen 10, el As vale 11 o 1 y todas las otras cartas conservan su valor.
 # El Black Jack se produce cuando las dos (2) primeras cartas son un diez o cualquier figura más un As.
-import colorama
+import requests
 from colorama import Fore
 from colorama import Style
-from services.start_game_service import StartGameService
-from services.deal_card_service import DealCardService
-from services.stand_service import StandService
-from services.status_service import StatusService
-from services.croupier_service import CroupierService
-
-
-croupier_service = CroupierService()
-start_game_service = StartGameService()
-deal_card_service = DealCardService()
-stand_service = StandService()
-get_status_service = StatusService()
-colorama.init()
 
 
 def get_player_selection():
@@ -28,67 +14,67 @@ def get_player_selection():
 
 
 def print_game_status(status_response):
-    for player, status in status_response.items():
-        status_text = format_status(status)
-        print_with_style(status_text)
-
-
-def format_status(status):
-    player_text = f'Player Name {status.get("name")} '
-    player_text += f'cards: {status.get("cards")} '
-    if len(status.get("total_points")) > 1:
-        total_points = f'{status.get("total_points")[0]} / {status.get("total_points")[1]}'
-    else:
-        total_points = f'{status.get("total_points")[0]}'
-    player_text += f'total points = {total_points}'
-    return player_text
-
-
-def print_with_style(text):
-    print(Fore.CYAN + Style.DIM + text + Style.RESET_ALL)
+    croupier = status_response.get('croupier')
+    croupier_cards = str(f'Cards player {croupier.get("name")} = {croupier.get("cards")}\n')
+    croupier_total_points = str(f'Total points = {croupier.get("total_points")}\n')
+    croupier_status = str(f'¿Is stand? = {croupier.get("is_stand")}\n Status = {croupier.get("status")}\n')
+    print(Fore.BLUE + Style.DIM + croupier_cards, croupier_total_points, croupier_status + Style.RESET_ALL)
+    for player in status_response.get('players'):
+        cards = str(f'Cards player {player.get("name")} = {player.get("cards")}\n')
+        total_points = str(f'Total points = {player.get("total_points")}\n')
+        status = str(f'¿Is stand? = {player.get("is_stand")}\n Status = {player.get("status")}\n')
+        print(Fore.CYAN + Style.DIM + cards, total_points, status + Style.RESET_ALL)
 
 
 def start_game():
-    player_name = input(Fore.WHITE + Style.DIM + 'Select your nickname : ' + Style.RESET_ALL)
-    start_game_service.start_game(player_name)
+    cant_players = input(Fore.GREEN + Style.DIM + 'Select number of players : ' + Style.RESET_ALL)
+    player_name = input(Fore.GREEN + Style.DIM + 'Select your nickname : ' + Style.RESET_ALL)
+    url = 'http://localhost:5000/start_game'
+    args = {'player_name': player_name, 'players_quantity': int(cant_players)}
+    requests.post(url, json=args)
 
 
 def is_game_finished(status_response):
-    for player, status in status_response.items():
-        if status.get('status') == 'winner':
-            return True
-
+    if status_response.get('status_game') == "finished":
+        return True
     return False
 
 
-def print_winner_text(status):
-    is_player_winner = status.get("player").get("status") == 'winner'
-    is_croupier_winner = status.get("croupier").get("status") == 'winner'
-    if is_player_winner and is_croupier_winner:
-        print(Fore.YELLOW + Style.DIM + 'Tied game')
-    elif is_player_winner:
-        print(Fore.GREEN + Style.DIM + 'Player wins')
-    elif is_croupier_winner:
-        print(Fore.RED + Style.DIM + 'Croupier wins')
+def croupier_play():
+    url = 'http://localhost:5000/stand'
+    requests.post(url)
+
+    url = 'http://localhost:5000/croupier_play'
+    requests.post(url)
 
 
 def play():
-    response = get_status_service.players_status()
+    url = 'http://localhost:5000/player_status'
+    response = requests.get(url).json()
     print_game_status(response)
     while not is_game_finished(response):
+        is_croupier_turn = False
+        if response.get('croupier').get('status') == "playing":
+            is_croupier_turn = True
+        if is_croupier_turn:
+            croupier_play()
+            url = 'http://localhost:5000/player_status'
+            response = requests.get(url).json()
+            print_game_status(response)
+            quit()
+
         selection = get_player_selection()
         if selection == "deal":
-            deal_card_service.deal_card()
+            url = 'http://localhost:5000/deal_card'
+            requests.post(url)
         else:
-            stand_service.stand()
-            croupier_service.croupier_play()
-        response = get_status_service.players_status()
-        print_game_status(response)
+            croupier_play()
 
-    print_winner_text(response)
+        url = 'http://localhost:5000/player_status'
+        response = requests.get(url).json()
+        print_game_status(response)
     quit()
 
 
 start_game()
 play()
-

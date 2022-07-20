@@ -13,4 +13,3 @@ app.add_url_rule('/deal_card', view_func=DealCardController.as_view('deal_card')
 app.add_url_rule('/stand', view_func=StandController.as_view('stand'))
 app.add_url_rule('/croupier_play', view_func=CroupierPlayController.as_view('croupier_play'))
 app.run(debug=True)
-

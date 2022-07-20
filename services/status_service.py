@@ -10,15 +10,21 @@ class StatusService:
         self.game_repository = GameRepository.get_instance()
 
     def players_status(self):
-        player_1 = self.player_repository.get_player()
+        list_players = self.player_repository.get_players()
         croupier = self.player_repository.get_croupier()
         game = self.game_repository.get()
+        players_status_list = []
 
         if not game:
             raise NotCreatedGame()
 
+        for player in list_players:
+            players_status_list.append(player.get_status())
+
         player_status_json = {
-            'player': player_1.get_status(),
+            'players_quantity': game.quantity_players,
+            'status_game': game.game_status,
+            'players': players_status_list,
             'croupier': croupier.get_status()
         }
         return player_status_json

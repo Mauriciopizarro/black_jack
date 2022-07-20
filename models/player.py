@@ -1,4 +1,5 @@
 from models.card import As
+import uuid
 
 
 class Player:
@@ -6,11 +7,14 @@ class Player:
     def __init__(self, name):
         self.cards = []
         self.name = name
+        self.player_id = uuid.uuid4()
         self.__stand = False
         self.__is_winner = False
         self.__is_looser = False
+        self.__is_playing = False
+        self.__waiting_croupier = False
 
-    def recive_cards(self, new_cards):
+    def receive_cards(self, new_cards):
         self.cards.extend(new_cards)
 
     def get_cards_symbols(self):
@@ -45,8 +49,14 @@ class Player:
     def stand(self):
         self.__stand = True
 
+    def set_as_waiting_croupier(self):
+        self.__waiting_croupier = True
+
     def set_as_winner(self):
         self.__is_winner = True
+
+    def set_as_playing(self):
+        self.__is_playing = True
 
     def set_as_looser(self):
         self.__is_looser = True
@@ -58,13 +68,26 @@ class Player:
         return False
 
     def get_status(self):
-        status = 'playing'
+        status = 'waiting_turn'
+
         if self.__is_looser:
+            self.__waiting_croupier = False
+            self.__is_playing = False
             status = 'looser'
+
         if self.__is_winner:
+            self.__waiting_croupier = False
+            self.__is_playing = False
             status = 'winner'
 
+        if self.__is_playing:
+            status = 'playing'
+
+        if self.__waiting_croupier:
+            status = 'waiting_croupier'
+
         return {
+            'id': self.player_id,
             'name': self.name,
             'cards': self.get_cards_symbols(),
             'total_points': self.get_possible_points(),

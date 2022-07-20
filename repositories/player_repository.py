@@ -1,6 +1,6 @@
 class PlayerRepository:
 
-    player = None
+    players = []
     croupier = None
     instance = None
 
@@ -10,14 +10,14 @@ class PlayerRepository:
             cls.instance = cls()
         return cls.instance
 
-    def save_player(self, player):
-        self.player = player
+    def save_players(self, players):
+        self.players = players
 
     def save_croupier(self, croupier):
         self.croupier = croupier
 
-    def get_player(self):
-        return self.player
+    def get_players(self):
+        return self.players
 
     def get_croupier(self):
         return self.croupier
