@@ -11,5 +11,5 @@ class GameRepository:
     def save(self, game):
         self.game = game
 
-    def get(self):
+    def get_game(self):
         return self.game

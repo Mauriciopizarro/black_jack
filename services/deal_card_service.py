@@ -14,7 +14,7 @@ class DealCardService:
     def deal_card(self):
         players = self.player_repository.get_players()
         croupier = self.player_repository.get_croupier()
-        game = self.game_repository.get()
+        game = self.game_repository.get_game()
 
         if not game:
             raise NotCreatedGame()
@@ -25,7 +25,7 @@ class DealCardService:
         if game.is_croupier_turn():
             raise CroupierTurn()
 
-        deck = self.deck_repository.get()
+        deck = self.deck_repository.get_deck()
         card = deck.get_cards(1)
 
         for player in players:

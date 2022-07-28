@@ -1,3 +1,4 @@
+
 from repositories.deck_repository import DeckRepository
 from repositories.player_repository import PlayerRepository
 from repositories.game_repository import GameRepository
@@ -48,7 +49,7 @@ class CroupierService:
     def croupier_play(self):
         players = self.player_repository.get_players()
         croupier = self.player_repository.get_croupier()
-        game = self.game_repository.get()
+        game = self.game_repository.get_game()
 
         if not game:
             raise NotCreatedGame()
@@ -61,14 +62,10 @@ class CroupierService:
 
         croupier.has_hidden_card = False
         while not is_there_winner(croupier, players, game):
-            deck = self.deck_repository.get()
+            deck = self.deck_repository.get_deck()
             card = deck.get_cards(1)
             croupier.receive_cards(card)
 
 
 class NotCroupierTurnError(Exception):
-    pass
-
-
-class CroupierCantPlayFinishedGameError(Exception):
     pass

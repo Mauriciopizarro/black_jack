@@ -1,3 +1,4 @@
+
 from repositories.game_repository import GameRepository
 from repositories.player_repository import PlayerRepository
 from services.exceptions import NotCreatedGame
@@ -12,7 +13,7 @@ class StatusService:
     def players_status(self):
         list_players = self.player_repository.get_players()
         croupier = self.player_repository.get_croupier()
-        game = self.game_repository.get()
+        game = self.game_repository.get_game()
         players_status_list = []
 
         if not game:

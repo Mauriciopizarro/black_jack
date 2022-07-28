@@ -13,5 +13,5 @@ class DeckRepository:
     def save(self, deck):
         self.deck = deck
 
-    def get(self):
+    def get_deck(self):
         return self.deck
