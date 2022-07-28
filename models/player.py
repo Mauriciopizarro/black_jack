@@ -17,6 +17,15 @@ class Player:
     def receive_cards(self, new_cards):
         self.cards.extend(new_cards)
 
+    def clear_status(self):
+        #self.__init__(name)
+        self.cards = []
+        self.__stand = False
+        self.__is_winner = False
+        self.__is_looser = False
+        self.__is_playing = False
+        self.__waiting_croupier = False
+
     def get_cards_symbols(self):
         return [card.symbol for card in self.cards]
 

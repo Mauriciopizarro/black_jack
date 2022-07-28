@@ -10,7 +10,7 @@ class StandService:
         self.game_repository = GameRepository.get_instance()
 
     def stand(self):
-        game = self.game_repository.get()
+        game = self.game_repository.get_game()
         players = self.player_repository.get_players()
         croupier = self.player_repository.get_croupier()
 

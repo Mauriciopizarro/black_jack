@@ -14,28 +14,25 @@ def get_player_selection():
 
 
 def print_game_status(status_response):
-    croupier = status_response.get('croupier')
-    croupier_cards = str(f'Cards player {croupier.get("name")} = {croupier.get("cards")}\n')
-    croupier_total_points = str(f'Total points = {croupier.get("total_points")}\n')
-    croupier_status = str(f'¿Is stand? = {croupier.get("is_stand")}\n Status = {croupier.get("status")}\n')
+    croupier = status_response.get_game('croupier')
+    croupier_cards = str(f'Cards player {croupier.get_game("name")} = {croupier.get_game("cards")}\n')
+    croupier_total_points = str(f'Total points = {croupier.get_game("total_points")}\n')
+    croupier_status = str(f'¿Is stand? = {croupier.get_game("is_stand")}\n Status = {croupier.get_game("status")}\n')
     print(Fore.BLUE + Style.DIM + croupier_cards, croupier_total_points, croupier_status + Style.RESET_ALL)
-    for player in status_response.get('players'):
-        cards = str(f'Cards player {player.get("name")} = {player.get("cards")}\n')
-        total_points = str(f'Total points = {player.get("total_points")}\n')
-        status = str(f'¿Is stand? = {player.get("is_stand")}\n Status = {player.get("status")}\n')
+    for player in status_response.get_game('players'):
+        cards = str(f'Cards player {player.get_game("name")} = {player.get_game("cards")}\n')
+        total_points = str(f'Total points = {player.get_game("total_points")}\n')
+        status = str(f'¿Is stand? = {player.get_game("is_stand")}\n Status = {player.get_game("status")}\n')
         print(Fore.CYAN + Style.DIM + cards, total_points, status + Style.RESET_ALL)
 
 
 def start_game():
-    cant_players = input(Fore.GREEN + Style.DIM + 'Select number of players : ' + Style.RESET_ALL)
-    player_name = input(Fore.GREEN + Style.DIM + 'Select your nickname : ' + Style.RESET_ALL)
     url = 'http://localhost:5000/start_game'
-    args = {'player_name': player_name, 'players_quantity': int(cant_players)}
-    requests.post(url, json=args)
+    requests.post(url)
 
 
 def is_game_finished(status_response):
-    if status_response.get('status_game') == "finished":
+    if status_response.get_game('status_game') == "finished":
         return True
     return False
 
@@ -54,7 +51,7 @@ def play():
     print_game_status(response)
     while not is_game_finished(response):
         is_croupier_turn = False
-        if response.get('croupier').get('status') == "playing":
+        if response.get_game('croupier').get_game('status') == "playing":
             is_croupier_turn = True
         if is_croupier_turn:
             croupier_play()

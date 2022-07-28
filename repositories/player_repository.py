@@ -10,8 +10,8 @@ class PlayerRepository:
             cls.instance = cls()
         return cls.instance
 
-    def save_players(self, players):
-        self.players = players
+    def save_players(self, player):
+        self.players.append(player)
 
     def save_croupier(self, croupier):
         self.croupier = croupier

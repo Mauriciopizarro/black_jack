@@ -2,7 +2,6 @@ from controllers.utils import ClientErrorResponse
 from services.croupier_service import (
     CroupierService,
     NotCroupierTurnError,
-    CroupierCantPlayFinishedGameError,
     NotCreatedGame,
 )
 from flask.views import View

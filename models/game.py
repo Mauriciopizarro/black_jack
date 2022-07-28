@@ -9,10 +9,19 @@ class Game:
         self.turn_order.append(croupier)
         self.turn_position = 0
         self.quantity_players = 1
-        self.game_status = "started"
+        self.game_status = "to_start"
 
     def change_turn(self):
         self.turn_position += 1
+
+    def set_started_game_status(self):
+        self.game_status = "started"
+
+    def empty_game(self, list_of_players, croupier):
+        self.__init__(list_of_players, croupier)
+        for player in list_of_players:
+            player.clear_status()
+        croupier.clear_status()
 
     def is_croupier_turn(self):
         if self.get_playerId_of_current_turn() == str(self.croupier.player_id):
@@ -37,6 +46,9 @@ class Game:
 
     def end_game(self):
         self.game_status = "finished"
+
+    def get_game_status(self):
+        return self.game_status
 
     def is_finished(self):
         return self.game_status == "finished"
