@@ -11,10 +11,13 @@ class DealCardService:
         self.player_repository = PlayerRepository.get_instance()
         self.game_repository = GameRepository.get_instance()
 
-    def deal_card(self):
+    def deal_card(self, player_id):
         players = self.player_repository.get_players()
         croupier = self.player_repository.get_croupier()
         game = self.game_repository.get_game()
+
+        if player_id == "":
+            raise EmptyPlayerID()
 
         if not game:
             raise NotCreatedGame()
@@ -25,11 +28,14 @@ class DealCardService:
         if game.is_croupier_turn():
             raise CroupierTurn()
 
+        if not game.get_playerId_of_current_turn() == player_id:
+            raise IncorrectPlayerTurn()
+
         deck = self.deck_repository.get_deck()
         card = deck.get_cards(1)
 
         for player in players:
-            if str(player.player_id) == game.get_playerId_of_current_turn():
+            if str(player.player_id) == game.get_playerId_of_current_turn() and str(player.player_id) == player_id:
                 player.receive_cards(card)
                 if player.is_over_limit():
                     game.change_turn()
@@ -49,4 +55,12 @@ class NotPlayerTurn(Exception):
 
 
 class CroupierTurn(Exception):
+    pass
+
+
+class IncorrectPlayerTurn(Exception):
+    pass
+
+
+class EmptyPlayerID(Exception):
     pass

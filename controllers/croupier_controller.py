@@ -25,7 +25,7 @@ class CroupierPlayController(View):
         except NotCreatedGame:
             return ClientErrorResponse(
                 description='There is not game created',
-                code='NO_GAME_CRATED',
+                code='GAME_NOT_CRATED',
             )
         except GameFinishedError:
             return ClientErrorResponse(

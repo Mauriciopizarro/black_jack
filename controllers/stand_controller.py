@@ -1,6 +1,8 @@
+from flask import request
+
 from controllers.utils import ClientErrorResponse
 from services.exceptions import NotCreatedGame, GameFinishedError
-from services.stand_service import StandService, NoTurnsToStand
+from services.stand_service import StandService, NoTurnsToStand, EmptyPlayerID, IncorrectPlayerTurn
 from flask.views import View
 
 
@@ -12,7 +14,8 @@ class StandController(View):
 
     def dispatch_request(self):
         try:
-            stand_service.stand()
+            player_id = request.json.get('player_id')
+            stand_service.stand(player_id)
         except NoTurnsToStand:
             return ClientErrorResponse(
                 description='There arent turns to stand',
@@ -21,12 +24,22 @@ class StandController(View):
         except NotCreatedGame:
             return ClientErrorResponse(
                 description='There is not game created',
-                code='NO_GAME_CRATED',
+                code='GAME_NOT_CRATED',
             )
         except GameFinishedError:
             return ClientErrorResponse(
                 description='The game is finished',
                 code='GAME_FINISHED',
             )
+        except EmptyPlayerID:
+            return ClientErrorResponse(
+                description='To use this resource is necessary to enter the player_id',
+                code='EMPTY_PLAYER_ID',
+            )
+        except IncorrectPlayerTurn:
+            return ClientErrorResponse(
+                description='Is not a turn to player entered',
+                code='NOT_PLAYER_TURN',
+            )
 
-        return {'message': "Stand"}
+        return {'message': "Player stand"}

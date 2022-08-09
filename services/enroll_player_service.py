@@ -9,10 +9,10 @@ class EnrollPlayerService:
     def __init__(self):
         self.player_repository = PlayerRepository.get_instance()
         self.game_repository = GameRepository.get_instance()
+        self.player_id_created = None
 
     def enroll_player(self, player_name):
         list_of_players = self.player_repository.get_players()
-        cant_players = len(list_of_players)
 
         if len(list_of_players) >= 3:
             raise IncorrectPlayersQuantity()
@@ -25,6 +25,10 @@ class EnrollPlayerService:
 
         player = Player(player_name)
         self.player_repository.save_players(player)
+        self.player_id_created = player.player_id
+
+    def get_player_id_created(self):
+        return self.player_id_created
 
 
 class IncorrectPlayersQuantity(Exception):

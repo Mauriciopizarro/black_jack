@@ -1,5 +1,4 @@
 
-from models.player import Croupier
 from repositories.game_repository import GameRepository
 from repositories.player_repository import PlayerRepository
 from services.exceptions import NotCreatedGame

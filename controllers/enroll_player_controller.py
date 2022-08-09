@@ -16,6 +16,7 @@ class EnrollPlayerController(View):
         try:
             player_name = request.json.get('player_name', 'Player')
             enroll_player_service.enroll_player(player_name)
+            player_id = enroll_player_service.get_player_id_created()
         except IncorrectPlayersQuantity:
             return ClientErrorResponse(
                 description='Only 3 players be allowed to play',
@@ -26,5 +27,7 @@ class EnrollPlayerController(View):
                 description='Can not enroll players in game started',
                 code='CAN_NOT_ENROLL_PLAYERS',
             )
-        message = "Player " + str(player_name) + " created"
-        return {'message': message}
+        message = "Player created successfully"
+        return {'message': message,
+                'player_id': player_id,
+                'name': str(player_name)}
