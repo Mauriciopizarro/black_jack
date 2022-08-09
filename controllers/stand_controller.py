@@ -1,11 +1,12 @@
 from flask import request
-
+from uuid import UUID
 from controllers.utils import ClientErrorResponse
-from services.exceptions import NotCreatedGame, GameFinishedError
 from services.stand_service import StandService, NoTurnsToStand, EmptyPlayerID, IncorrectPlayerTurn
 from flask.views import View
+from fastapi import APIRouter, HTTPException, Body
+from services.exceptions import NotCreatedGame, GameFinishedError
 
-
+router = APIRouter()
 stand_service = StandService()
 
 
@@ -43,3 +44,30 @@ class StandController(View):
             )
 
         return {'message': "Player stand"}
+
+
+@router.post("/stand")
+async def stand_controller(player_id: UUID = Body(embed=True)):
+    try:
+        stand_service.stand(str(player_id))
+    except NoTurnsToStand:
+        raise HTTPException(
+            status_code=400, detail='There arent turns to stand',
+        )
+    except NotCreatedGame:
+        raise HTTPException(
+            status_code=400, detail='There is not game created',
+        )
+    except GameFinishedError:
+        raise HTTPException(
+            status_code=400, detail='The game is finished',
+        )
+    except EmptyPlayerID:
+        raise HTTPException(
+            status_code=400, detail='To use this resource is necessary to enter the player_id',
+        )
+    except IncorrectPlayerTurn:
+        raise HTTPException(
+            status_code=400, detail='Is not a turn to player entered',
+        )
+    return {'message': "Player stand"}

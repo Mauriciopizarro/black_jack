@@ -1,3 +1,6 @@
 colorama==0.4.4
 Flask==2.1.2
 requests==2.25.1
+fastapi==0.79.0
+uvicorn[standard]==0.18.2
+pydantic==1.9.1
