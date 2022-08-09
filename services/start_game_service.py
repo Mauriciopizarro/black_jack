@@ -29,6 +29,10 @@ class StartGameService:
             if game.game_status == "started":
                 raise GameAlreadyStarted()
 
+        if game is not None:
+            if game.game_status == "finished":
+                raise GameNeedToBeRestarted()
+
         for player in list_of_players:
             player_cards = deck.get_cards(2)
             player.receive_cards(player_cards)
@@ -54,4 +58,8 @@ class NotPlayersCreated(Exception):
 
 
 class GameAlreadyStarted(Exception):
+    pass
+
+
+class GameNeedToBeRestarted(Exception):
     pass

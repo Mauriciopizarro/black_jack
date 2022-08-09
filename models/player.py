@@ -18,7 +18,6 @@ class Player:
         self.cards.extend(new_cards)
 
     def clear_status(self):
-        #self.__init__(name)
         self.cards = []
         self.__stand = False
         self.__is_winner = False

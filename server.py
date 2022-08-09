@@ -1,8 +1,8 @@
 from flask import Flask
 
 from controllers.croupier_controller import CroupierPlayController
-from controllers.enroll_player_controller import EnrollPlayerController
 from controllers.deal_card_controller import DealCardController
+from controllers.enroll_player_controller import EnrollPlayerController
 from controllers.restart_game_controller import RestartGameController
 from controllers.status_controller import StatusController
 from controllers.stand_controller import StandController
