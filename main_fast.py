@@ -7,7 +7,8 @@ from controllers import (
     deal_card_controller,
     stand_controller,
     restart_game_controller,
-    croupier_controller
+    croupier_controller,
+    login_controller
 )
 
 app = FastAPI()
@@ -20,3 +21,4 @@ app.include_router(deal_card_controller.router)
 app.include_router(stand_controller.router)
 app.include_router(restart_game_controller.router)
 app.include_router(croupier_controller.router)
+app.include_router(login_controller.router)
