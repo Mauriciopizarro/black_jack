@@ -2,9 +2,10 @@ from flask import request
 from flask.views import View
 from pydantic import BaseModel
 
-from fastapi import APIRouter, HTTPException, Body
+from fastapi import APIRouter, HTTPException, Depends
 
-from controllers.utils import ClientErrorResponse
+from controllers.utils import ClientErrorResponse, authenticate_with_token
+from models.user import User
 from services.enroll_player_service import EnrollPlayerService, CantEnrollPlayersStartedGame
 from services.enroll_player_service import IncorrectPlayersQuantity
 
@@ -45,9 +46,9 @@ class EnrollPlayerController(View):
 
 
 @router.post("/enroll_player", response_model=EnrollPlayerResponse)
-async def enroll_player(player_name: str = Body(embed=True)):
+async def enroll_player(current_user: User = Depends(authenticate_with_token)):
     try:
-        enroll_player_service.enroll_player(player_name)
+        enroll_player_service.enroll_player(current_user.username)
         player_id = enroll_player_service.get_player_id_created()
     except IncorrectPlayersQuantity:
         raise HTTPException(
@@ -58,5 +59,5 @@ async def enroll_player(player_name: str = Body(embed=True)):
             status_code=400, detail='Can not enroll players in game started'
         )
     return EnrollPlayerResponse(
-        message="Player created successfully", name=str(player_name), player_id=str(player_id)
+        message="Player created successfully", name=str(current_user.username), player_id=str(player_id)
     )
