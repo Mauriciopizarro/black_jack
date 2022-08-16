@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from pydantic import BaseModel
 from typing import Union
 from passlib.context import CryptContext
@@ -10,6 +12,7 @@ class User(BaseModel):
     username: str
     email: Union[str, None] = None
     full_name: Union[str, None] = None
+    user_id: UUID
     disabled: Union[bool, None] = None
 
 

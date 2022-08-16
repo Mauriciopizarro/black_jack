@@ -1,9 +1,9 @@
 from flask import request
-from uuid import UUID
-from controllers.utils import ClientErrorResponse
+from controllers.utils import ClientErrorResponse, authenticate_with_token
+from models.user import User
 from services.deal_card_service import DealCardService, NotPlayerTurn, CroupierTurn, IncorrectPlayerTurn, EmptyPlayerID
 from flask.views import View
-from fastapi import APIRouter, HTTPException, Body
+from fastapi import APIRouter, HTTPException, Depends
 from services.exceptions import NotCreatedGame, GameFinishedError
 
 
@@ -53,9 +53,9 @@ class DealCardController(View):
 
 
 @router.post("/deal_card")
-async def deal_card_controller(player_id: UUID = Body(embed=True)):
+async def deal_card_controller(current_user: User = Depends(authenticate_with_token)):
     try:
-        deal_card_service.deal_card(str(player_id))
+        deal_card_service.deal_card(current_user.user_id)
     except NotCreatedGame:
         raise HTTPException(
             status_code=400, detail='There is not game created',

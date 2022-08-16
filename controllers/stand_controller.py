@@ -1,9 +1,10 @@
 from flask import request
 from uuid import UUID
-from controllers.utils import ClientErrorResponse
+from controllers.utils import ClientErrorResponse, authenticate_with_token
+from models.user import User
 from services.stand_service import StandService, NoTurnsToStand, EmptyPlayerID, IncorrectPlayerTurn
 from flask.views import View
-from fastapi import APIRouter, HTTPException, Body
+from fastapi import APIRouter, HTTPException, Body, Depends
 from services.exceptions import NotCreatedGame, GameFinishedError
 
 router = APIRouter()
@@ -47,9 +48,9 @@ class StandController(View):
 
 
 @router.post("/stand")
-async def stand_controller(player_id: UUID = Body(embed=True)):
+async def stand_controller(current_user: User = Depends(authenticate_with_token)):
     try:
-        stand_service.stand(str(player_id))
+        stand_service.stand(current_user.user_id)
     except NoTurnsToStand:
         raise HTTPException(
             status_code=400, detail='There arent turns to stand',
