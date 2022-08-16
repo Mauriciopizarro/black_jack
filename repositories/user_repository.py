@@ -1,18 +1,14 @@
+import uuid
+
 from models.user import UserInDB
 
 fake_users_db = {
-    "johndoe": {
-        "username": "johndoe",
-        "full_name": "John Doe",
+    "Mauri": {
+        "username": "Mauri",
+        "full_name": "Mauricio Pizarro",
         "email": "johndoe@example.com",
         "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
-        "disabled": False,
-    },
-    "mauri": {
-        "username": "mauri",
-        "full_name": "John Doe",
-        "email": "johndoe@example.com",
-        "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
+        "user_id": uuid.uuid4(),
         "disabled": False,
     }
 }

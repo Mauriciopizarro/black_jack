@@ -1,13 +1,14 @@
-from models.card import As
 import uuid
+
+from models.card import As
 
 
 class Player:
 
-    def __init__(self, name):
+    def __init__(self, name, user_id):
         self.cards = []
         self.name = name
-        self.player_id = uuid.uuid4()
+        self.player_id = user_id
         self.__stand = False
         self.__is_winner = False
         self.__is_looser = False
@@ -105,8 +106,8 @@ class Player:
 
 
 class Croupier(Player):
-    def __init__(self, *args):
-        super(Croupier, self).__init__('Croupier')
+    def __init__(self):
+        super(Croupier, self).__init__('Croupier', uuid.uuid4())
         self.has_hidden_card = True
 
     def get_cards_symbols(self):

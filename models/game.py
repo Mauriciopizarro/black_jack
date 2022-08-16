@@ -13,6 +13,8 @@ class Game:
 
     def change_turn(self):
         self.turn_position += 1
+        player = self.turn_order[self.turn_position]
+        player.set_as_playing()
 
     def set_started_game_status(self):
         self.game_status = "started"

@@ -11,7 +11,7 @@ class EnrollPlayerService:
         self.game_repository = GameRepository.get_instance()
         self.player_id_created = None
 
-    def enroll_player(self, player_name):
+    def enroll_player(self, player_name, player_id):
         list_of_players = self.player_repository.get_players()
 
         if len(list_of_players) >= 3:
@@ -23,7 +23,7 @@ class EnrollPlayerService:
             if game.game_status == "started":
                 raise CantEnrollPlayersStartedGame()
 
-        player = Player(player_name)
+        player = Player(player_name, player_id)
         self.player_repository.save_players(player)
         self.player_id_created = player.player_id
 

@@ -22,4 +22,3 @@ async def authenticate_with_token(token: str = Depends(oauth2_scheme)):
             status_code=400,
             detail="Invalid Token",
         )
-

@@ -48,7 +48,7 @@ class EnrollPlayerController(View):
 @router.post("/enroll_player", response_model=EnrollPlayerResponse)
 async def enroll_player(current_user: User = Depends(authenticate_with_token)):
     try:
-        enroll_player_service.enroll_player(current_user.username)
+        enroll_player_service.enroll_player(current_user.username, current_user.user_id)
         player_id = enroll_player_service.get_player_id_created()
     except IncorrectPlayersQuantity:
         raise HTTPException(

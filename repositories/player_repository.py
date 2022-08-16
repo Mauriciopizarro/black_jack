@@ -19,6 +19,11 @@ class PlayerRepository:
     def get_players(self):
         return self.players
 
+    def get_by_id(self, player_id):
+        for player in self.players:
+            if player.player_id == player_id:
+                return player
+
     def get_croupier(self):
         return self.croupier
 
