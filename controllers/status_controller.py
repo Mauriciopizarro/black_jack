@@ -1,7 +1,6 @@
-from controllers.utils import ClientErrorResponse
+
 from services.exceptions import NotCreatedGame
 from services.status_service import StatusService
-from flask.views import View
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List
@@ -27,26 +26,14 @@ class StatusResponse(BaseModel):
     status_game: str
 
 
-class StatusController(View):
-    methods = ['GET']
+class StatusController:
 
-    def dispatch_request(self):
+    @router.get("/player_status", response_model=StatusResponse)
+    async def get_status_controller():
         try:
             player_status_json = get_status_service.players_status()
             return player_status_json
         except NotCreatedGame:
-            return ClientErrorResponse(
-                description='There is not game created',
-                code='GAME_NOT_CRATED'
+            raise HTTPException(
+                status_code=400, detail='There is not game created'
             )
-
-
-@router.get("/player_status", response_model=StatusResponse)
-async def get_status_controller():
-    try:
-        player_status_json = get_status_service.players_status()
-        return player_status_json
-    except NotCreatedGame:
-        raise HTTPException(
-            status_code=400, detail='There is not game created'
-        )
