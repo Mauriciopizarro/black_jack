@@ -1,5 +1,4 @@
 from uuid import UUID
-
 from pydantic import BaseModel
 from typing import Union
 from passlib.context import CryptContext

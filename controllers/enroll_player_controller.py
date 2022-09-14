@@ -1,16 +1,11 @@
-from flask import request
-from flask.views import View
 from pydantic import BaseModel
-
 from fastapi import APIRouter, HTTPException, Depends
-
-from controllers.utils import ClientErrorResponse, authenticate_with_token
+from controllers.utils import authenticate_with_token
 from models.user import User
 from services.enroll_player_service import EnrollPlayerService, CantEnrollPlayersStartedGame
 from services.enroll_player_service import IncorrectPlayersQuantity
 
 enroll_player_service = EnrollPlayerService()
-
 router = APIRouter()
 
 
@@ -20,44 +15,21 @@ class EnrollPlayerResponse(BaseModel):
     player_id: str
 
 
-class EnrollPlayerController(View):
+class EnrollPlayerController:
 
-    methods = ['POST']
-
-    def dispatch_request(self):
+    @router.post("/enroll_player", response_model=EnrollPlayerResponse)
+    async def enroll_player(current_user: User = Depends(authenticate_with_token)):
         try:
-            player_name = request.json.get('player_name', 'Player')
-            enroll_player_service.enroll_player(player_name)
+            enroll_player_service.enroll_player(current_user.username, current_user.user_id)
             player_id = enroll_player_service.get_player_id_created()
         except IncorrectPlayersQuantity:
-            return ClientErrorResponse(
-                description='Only 3 players be allowed to play',
-                code='QUANTITY_PLAYERS_ERROR',
+            raise HTTPException(
+                status_code=400, detail='Only 3 players be allowed to play'
             )
         except CantEnrollPlayersStartedGame:
-            return ClientErrorResponse(
-                description='Can not enroll players in game started',
-                code='CAN_NOT_ENROLL_PLAYERS',
+            raise HTTPException(
+                status_code=400, detail='Can not enroll players in game started'
             )
-        message = "Player created successfully"
-        return {'message': message,
-                'player_id': player_id,
-                'name': str(player_name)}
-
-
-@router.post("/enroll_player", response_model=EnrollPlayerResponse)
-async def enroll_player(current_user: User = Depends(authenticate_with_token)):
-    try:
-        enroll_player_service.enroll_player(current_user.username, current_user.user_id)
-        player_id = enroll_player_service.get_player_id_created()
-    except IncorrectPlayersQuantity:
-        raise HTTPException(
-            status_code=400, detail='Only 3 players be allowed to play'
+        return EnrollPlayerResponse(
+            message="Player created successfully", name=str(current_user.username), player_id=str(player_id)
         )
-    except CantEnrollPlayersStartedGame:
-        raise HTTPException(
-            status_code=400, detail='Can not enroll players in game started'
-        )
-    return EnrollPlayerResponse(
-        message="Player created successfully", name=str(current_user.username), player_id=str(player_id)
-    )
