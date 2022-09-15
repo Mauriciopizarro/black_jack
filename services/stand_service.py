@@ -1,4 +1,4 @@
-from repositories.player_repository import PlayerRepository
+from models.game import NotStartedGame
 from repositories.game_repository import GameRepository
 from services.exceptions import NotCreatedGame, GameFinishedError
 
@@ -6,28 +6,27 @@ from services.exceptions import NotCreatedGame, GameFinishedError
 class StandService:
 
     def __init__(self):
-        self.player_repository = PlayerRepository.get_instance()
         self.game_repository = GameRepository.get_instance()
 
     def stand(self, player_id):
         game = self.game_repository.get_game()
-        player = self.player_repository.get_by_id(player_id)
 
         if not game:
             raise NotCreatedGame()
 
+        if game.game_status != "started":
+            raise NotStartedGame()
+
         if game.is_finished():
             raise GameFinishedError()
 
-        if not player:
+        if not player_id:
             raise EmptyPlayerID()
 
-        if not game.get_playerId_of_current_turn() == str(player.player_id):
+        if not game.is_player_turn(player_id):
             raise IncorrectPlayerTurn()
 
-        player.stand()
-        player.set_as_waiting_croupier()
-        game.change_turn()
+        game.stand_current_turn_player()
 
 
 class NoTurnsToStand(Exception):
@@ -40,4 +39,3 @@ class EmptyPlayerID(Exception):
 
 class IncorrectPlayerTurn(Exception):
     pass
-

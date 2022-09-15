@@ -1,5 +1,5 @@
 import random
-from models.card import Card, As, LetterCard, NumberCard
+from models.card import As, LetterCard, NumberCard
 
 
 class Deck:
