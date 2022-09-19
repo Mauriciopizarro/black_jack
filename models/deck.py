@@ -61,9 +61,9 @@ class Deck:
 
         random.shuffle(self.cards)
 
-    def get_cards(self, cards_to_return):
+    def get_cards(self, quantity_cards):
         cards = []
-        for i in range(cards_to_return):
+        for i in range(quantity_cards):
             card = self.cards.pop()
             cards.append(card)
 

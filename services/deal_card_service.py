@@ -23,7 +23,7 @@ class DealCardService:
         if game.is_finished():
             raise GameFinishedError()
 
-        if game.is_croupier_turn():
+        if game.get_playerId_of_current_turn() == str(game.croupier.player_id):
             raise CroupierTurn()
 
         if not game.is_player_turn(player_id):

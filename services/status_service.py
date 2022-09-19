@@ -15,6 +15,9 @@ class StatusService:
         if not game:
             raise NotCreatedGame()
 
+        if game.game_status == "finished":
+            return game.get_status()
+
         if game.game_status != "started":
             raise NotStartedGame()
 

@@ -18,16 +18,12 @@ class Player:
     def receive_cards(self, new_cards):
         self.cards.extend(new_cards)
 
-    def clear_status(self):
-        self.cards = []
-        self.__stand = False
-        self.__is_winner = False
-        self.__is_looser = False
-        self.__is_playing = False
-        self.__waiting_croupier = False
-
     def get_cards_symbols(self):
         return [card.symbol for card in self.cards]
+
+    def is_over_21_points(self):
+        if self.get_total_points() > 21:
+            return True
 
     def get_total_points(self):
         total_point_list = self.get_possible_points()

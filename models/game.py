@@ -15,48 +15,30 @@ class Game:
 
     def enroll_player(self, player):
         list_of_ids = [str(saved_player.player_id) for saved_player in self.players]
+
         if str(player.player_id) in list_of_ids:
             raise AlreadyEnrolledPlayer()
+
         if len(self.players) >= 3:
             raise IncorrectPlayersQuantity()
+
         self.players.append(player)
         self.turn_order.append(player)
 
-    def empty_game(self, list_of_players, croupier):
-        self.__init__(list_of_players, croupier)
-        for player in list_of_players:
-            player.clear_status()
-        croupier.clear_status()
-
-    def is_croupier_turn(self):
-        if self.get_playerId_of_current_turn() == str(self.croupier.player_id):
-            return True
-        return False
-
     def all_players_over_the_limit(self):
-        players_over_the_limit = 0
         for player in self.players:
-            if player.get_total_points() > 21:
-                players_over_the_limit += 1
-        if players_over_the_limit == len(self.players):
-            return True
-        return False
+            if not player.is_over_21_points():
+                return False
+        return True
 
     def get_playerId_of_current_turn(self):
         player = self.turn_order[self.turn_position]
         return str(player.player_id)
 
-    def end_game(self):
-        self.game_status = "finished"
-
-    def get_game_status(self):
-        return self.game_status
-
     def is_finished(self):
         return self.game_status == "finished"
 
     def start(self):
-
         if len(self.players) == 0:
             raise NotPlayersCreated()
 
@@ -67,11 +49,9 @@ class Game:
             raise GameNeedToBeRestarted()
 
         for player in self.players:
-            player_cards = self.deck.get_cards(2)
-            player.receive_cards(player_cards)
+            player.receive_cards(self.deck.get_cards(2))
 
-        croupier_cards = self.deck.get_cards(2)
-        self.croupier.receive_cards(croupier_cards)
+        self.croupier.receive_cards(self.deck.get_cards(2))
         self.turn_order.append(self.croupier)
         self.game_status = "started"
         self.turn_order[0].set_as_playing()
@@ -89,7 +69,7 @@ class Game:
 
         if self.all_players_over_the_limit():
             self.croupier.set_as_winner()
-            self.end_game()
+            self.game_status = "finished"
 
     def stand_current_turn_player(self):
         player = self.turn_order[self.turn_position]
@@ -104,7 +84,7 @@ class Game:
 
         if self.all_players_over_the_limit():
             self.croupier.set_as_winner()
-            self.end_game()
+            self.game_status = "finished"
             return True
 
         if self.croupier.is_over_limit():
@@ -112,7 +92,7 @@ class Game:
                 if player.get_total_points() <= 21:
                     player.set_as_winner()
             self.croupier.set_as_looser()
-            self.end_game()
+            self.game_status = "finished"
             return True
 
         if croupier_points > 16:
@@ -125,7 +105,7 @@ class Game:
                     if player.get_total_points() == croupier_points:
                         player.set_as_winner()
                     player.set_as_looser()
-                self.end_game()
+                self.game_status = "finished"
                 return True
 
         return False
@@ -139,8 +119,7 @@ class Game:
 
         self.croupier.has_hidden_card = False
         while not self.is_there_winner():
-            card = self.deck.get_cards(1)
-            self.croupier.receive_cards(card)
+            self.croupier.receive_cards(self.deck.get_cards(1))
 
     def get_status(self):
         players_status_list = []
