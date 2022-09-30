@@ -2,8 +2,7 @@
 from fastapi import HTTPException, APIRouter
 from pydantic import BaseModel
 
-from models.user import IncorrectPasswordError
-from repositories.user_repository import NotExistentUser
+from models.user import IncorrectPasswordError, NotExistentUser
 from services.login_service import LoginService
 from services.token_service import TokenService
 

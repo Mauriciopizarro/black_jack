@@ -1,8 +1,7 @@
-import uuid
-
+from pysondb import db
 from models.user import UserInDB, NotExistentUser
 
-fake_users_db = {
+"""fake_users_db = {
     "Mauri": {
         "username": "Mauri",
         "full_name": "Mauricio Pizarro",
@@ -20,9 +19,10 @@ fake_users_db = {
         "disabled": False,
     }
 }
+"""
 
 
-class UserRepository:
+class UserPysonRepository:
     instance = None
 
     # Patron singleton
@@ -30,12 +30,13 @@ class UserRepository:
     def get_instance(cls):
         if not cls.instance:
             cls.instance = cls()
+            cls.user_db = db.getDb("black_jack_users.json")
 
         return cls.instance
 
     def get_by_username(self, username):
-        if username not in fake_users_db:
+        query_result = self.user_db.getBy({"username": username})
+        if len(query_result) == 0:
             raise NotExistentUser()
-
-        user_dict = fake_users_db[username]
+        user_dict = query_result[0]
         return UserInDB(**user_dict)

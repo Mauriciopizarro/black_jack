@@ -13,7 +13,7 @@ stand_service = StandService()
 @router.post("/stand")
 async def stand_controller(current_user: User = Depends(authenticate_with_token)):
     try:
-        stand_service.stand(current_user.user_id)
+        stand_service.stand(current_user.id)
 
     except NotCreatedGame:
         raise HTTPException(

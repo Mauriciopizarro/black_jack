@@ -1,6 +1,4 @@
-from uuid import UUID
 from pydantic import BaseModel
-from typing import Union
 from passlib.context import CryptContext
 
 
@@ -9,10 +7,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 class User(BaseModel):
     username: str
-    email: Union[str, None] = None
-    full_name: Union[str, None] = None
-    user_id: UUID
-    disabled: Union[bool, None] = None
+    id: int
 
 
 class UserInDB(User):
@@ -24,4 +19,8 @@ class UserInDB(User):
 
 
 class IncorrectPasswordError(Exception):
+    pass
+
+
+class NotExistentUser(Exception):
     pass
