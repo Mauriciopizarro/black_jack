@@ -9,11 +9,7 @@ class Player:
         self.cards = []
         self.name = name
         self.player_id = user_id
-        self.__stand = False
-        self.__is_winner = False
-        self.__is_looser = False
-        self.__is_playing = False
-        self.__waiting_croupier = False
+        self.__status = "waiting_turn"
 
     def receive_cards(self, new_cards):
         self.cards.extend(new_cards)
@@ -49,22 +45,19 @@ class Player:
         return total_points_list
 
     def is_stand(self):
-        return self.__stand
+        return self.__status == "waiting_croupier"
 
     def stand(self):
-        self.__stand = True
-
-    def set_as_waiting_croupier(self):
-        self.__waiting_croupier = True
+        self.__status = "waiting_croupier"
 
     def set_as_winner(self):
-        self.__is_winner = True
+        self.__status = "winner"
 
     def set_as_playing(self):
-        self.__is_playing = True
+        self.__status = "playing"
 
     def set_as_looser(self):
-        self.__is_looser = True
+        self.__status = "looser"
 
     def is_over_limit(self):
         points = self.get_total_points()
@@ -73,30 +66,12 @@ class Player:
         return False
 
     def get_status(self):
-        status = 'waiting_turn'
-
-        if self.__is_looser:
-            self.__waiting_croupier = False
-            self.__is_playing = False
-            status = 'looser'
-
-        if self.__is_winner:
-            self.__waiting_croupier = False
-            self.__is_playing = False
-            status = 'winner'
-
-        if self.__is_playing:
-            status = 'playing'
-
-        if self.__waiting_croupier:
-            status = 'waiting_croupier'
-
         return {
             'id': self.player_id,
             'name': self.name,
             'cards': self.get_cards_symbols(),
             'total_points': self.get_possible_points(),
-            'status': status,
+            'status': self.__status,
             'is_stand': self.is_stand()
         }
 

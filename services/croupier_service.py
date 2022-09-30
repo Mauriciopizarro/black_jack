@@ -1,6 +1,6 @@
 
 from repositories.game_repository import GameRepository
-from services.exceptions import NotCreatedGame, GameFinishedError
+from services.exceptions import NotCreatedGame
 
 
 class CroupierService:
@@ -13,8 +13,5 @@ class CroupierService:
 
         if not game:
             raise NotCreatedGame()
-
-        if game.is_finished():
-            raise GameFinishedError()
 
         game.croupier_play()

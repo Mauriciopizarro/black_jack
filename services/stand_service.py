@@ -1,6 +1,5 @@
-from models.game import NotStartedGame
 from repositories.game_repository import GameRepository
-from services.exceptions import NotCreatedGame, GameFinishedError
+from services.exceptions import NotCreatedGame
 
 
 class StandService:
@@ -14,28 +13,12 @@ class StandService:
         if not game:
             raise NotCreatedGame()
 
-        if game.game_status != "started":
-            raise NotStartedGame()
-
-        if game.is_finished():
-            raise GameFinishedError()
-
         if not player_id:
             raise EmptyPlayerID()
 
-        if not game.is_player_turn(player_id):
-            raise IncorrectPlayerTurn()
-
-        game.stand_current_turn_player()
-
-
-class NoTurnsToStand(Exception):
-    pass
+        game.stand_current_turn_player(player_id)
 
 
 class EmptyPlayerID(Exception):
     pass
 
-
-class IncorrectPlayerTurn(Exception):
-    pass
