@@ -1,7 +1,7 @@
 from controllers.utils import authenticate_with_token
-from models.game import NotStartedGame
+from models.game import NotStartedGame, IncorrectPlayerTurn
 from models.user import User
-from services.deal_card_service import DealCardService, NotPlayerTurn, CroupierTurn, IncorrectPlayerTurn, EmptyPlayerID
+from services.deal_card_service import DealCardService, EmptyPlayerID
 from fastapi import APIRouter, HTTPException, Depends
 from services.exceptions import NotCreatedGame, GameFinishedError
 
@@ -21,14 +21,6 @@ async def deal_card_controller(current_user: User = Depends(authenticate_with_to
     except GameFinishedError:
         raise HTTPException(
             status_code=400, detail='The game is finished'
-        )
-    except NotPlayerTurn:
-        raise HTTPException(
-            status_code=400, detail='Is not player turn'
-        )
-    except CroupierTurn:
-        raise HTTPException(
-            status_code=400, detail='Is turn to croupier'
         )
     except IncorrectPlayerTurn:
         raise HTTPException(

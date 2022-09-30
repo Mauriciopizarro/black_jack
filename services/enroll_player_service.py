@@ -17,17 +17,7 @@ class EnrollPlayerService:
         if not game:
             raise NotCreatedGame()
 
-        if game.game_status != "created":
-            raise CantEnrollPlayersStartedGame()
-
         player = Player(player_name, player_id)
         game.enroll_player(player)
         self.game_repository.save(game)
-        self.player_id_created = player.player_id
-
-    def get_player_id_created(self):
-        return self.player_id_created
-
-
-class CantEnrollPlayersStartedGame(Exception):
-    pass
+        return player.player_id
