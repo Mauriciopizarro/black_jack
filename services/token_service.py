@@ -3,7 +3,7 @@ from models.user import User
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
 
-from repositories.user_repository import UserRepository
+from repositories.user_pyson_repository import UserPysonRepository
 
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
@@ -32,7 +32,7 @@ class TokenService:
                 raise InvalidTokenError()
         except JWTError:
             raise InvalidTokenError()
-        repository = UserRepository.get_instance()
+        repository = UserPysonRepository.get_instance()
         user = repository.get_by_username(username=username)
         return user
 

@@ -13,7 +13,7 @@ router = APIRouter()
 @router.post("/deal_card")
 async def deal_card_controller(current_user: User = Depends(authenticate_with_token)):
     try:
-        deal_card_service.deal_card(current_user.user_id)
+        deal_card_service.deal_card(current_user.id)
     except NotCreatedGame:
         raise HTTPException(
             status_code=400, detail='There is not game created',
