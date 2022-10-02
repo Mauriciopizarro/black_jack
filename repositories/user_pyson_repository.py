@@ -20,3 +20,9 @@ class UserPysonRepository:
             raise NotExistentUser()
         user_dict = query_result[0]
         return UserInDB(**user_dict)
+
+    def is_existent_user(self, username):
+        query_result = self.user_db.getBy({"username": username})
+        if len(query_result) > 0:
+            return True
+        return False

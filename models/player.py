@@ -1,5 +1,4 @@
-import uuid
-
+from random import randint
 from models.card import As
 
 
@@ -78,7 +77,7 @@ class Player:
 
 class Croupier(Player):
     def __init__(self):
-        super(Croupier, self).__init__('Croupier', uuid.uuid4())
+        super(Croupier, self).__init__('Croupier', randint(0, 999999999999))
         self.has_hidden_card = True
 
     def get_cards_symbols(self):
