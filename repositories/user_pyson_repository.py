@@ -1,5 +1,5 @@
 from pysondb import db
-from models.user import UserInDB, NotExistentUser
+from models.user import UserInDB, NotExistentUser, UserPlainPassword
 
 
 class UserPysonRepository:
@@ -21,8 +21,14 @@ class UserPysonRepository:
         user_dict = query_result[0]
         return UserInDB(**user_dict)
 
-    def is_existent_user(self, username):
-        query_result = self.user_db.getBy({"username": username})
+    def save_user(self, user: UserPlainPassword):
+        query_result = self.user_db.getBy({"username": user.username})
         if len(query_result) > 0:
-            return True
-        return False
+            raise UserExistent()
+        hashed_password = user.get_hashed_password()
+        user_id = self.user_db.add({"username": user.username, "hashed_password": hashed_password})
+        return UserInDB(hashed_password=hashed_password, id=user_id, username=user.username)
+
+
+class UserExistent(Exception):
+    pass

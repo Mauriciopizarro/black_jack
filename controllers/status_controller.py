@@ -18,8 +18,16 @@ class Player(BaseModel):
     total_points: List[int]
 
 
+class Croupier(BaseModel):
+    cards: List[str]
+    is_stand: bool
+    name: str
+    status: str
+    total_points: List[int]
+
+
 class StatusResponse(BaseModel):
-    croupier: Player
+    croupier: Croupier
     players: List[Player]
     players_quantity: int
     status_game: str
