@@ -16,12 +16,12 @@ class EnrollPlayerResponse(BaseModel):
     player_id: str
 
 
-@router.post("/enroll_player", response_model=EnrollPlayerResponse)
-async def enroll_player(current_user: User = Depends(authenticate_with_token)):
+@router.post("/enroll_player/{game_id}", response_model=EnrollPlayerResponse)
+async def enroll_player(game_id: int, current_user: User = Depends(authenticate_with_token)):
     try:
-        player_id = enroll_player_service.enroll_player(current_user.username, current_user.id)
+        player_id = enroll_player_service.enroll_player(current_user.username, current_user.id, game_id)
         return EnrollPlayerResponse(
-            message="Player created successfully",
+            message="Player enrolled successfully",
             name=str(current_user.username),
             player_id=str(player_id)
         )

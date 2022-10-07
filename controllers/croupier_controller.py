@@ -11,10 +11,10 @@ croupier_service = CroupierService()
 router = APIRouter()
 
 
-@router.post("/croupier_play")
-async def croupier_controller():
+@router.post("/croupier_play/{game_id}")
+async def croupier_controller(game_id: int):
     try:
-        croupier_service.croupier_play()
+        croupier_service.croupier_play(game_id)
     except NotCroupierTurnError:
         raise HTTPException(
             status_code=400, detail='Is not the croupier turn',

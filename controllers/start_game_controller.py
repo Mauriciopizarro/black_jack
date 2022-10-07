@@ -6,10 +6,10 @@ router = APIRouter()
 star_game_service = StartGameService()
 
 
-@router.post("/start_game")
-def start_game():
+@router.post("/start_game/{game_id}")
+def start_game(game_id: int):
     try:
-        star_game_service.start_game()
+        star_game_service.start_game(game_id)
     except NotPlayersCreated:
         raise HTTPException(
             status_code=400, detail='There is not players enrolled'

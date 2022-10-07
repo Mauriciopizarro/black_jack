@@ -1,20 +1,19 @@
-
-from repositories.game_repository import GameRepository
+from repositories.game_pyson_repository import GamePysonRepository
 
 
 class StartGameService:
 
     def __init__(self):
-        self.game_repository = GameRepository.get_instance()
+        self.game_repository = GamePysonRepository.get_instance()
 
-    def start_game(self):
-        game = self.game_repository.get_game()
+    def start_game(self, game_id):
+        game = self.game_repository.get_game(game_id)
 
         if game is None:
             raise NotGameCreated()
 
         game.start()
-        self.game_repository.save(game)
+        self.game_repository.update(game)
 
 
 class NotGameCreated(Exception):

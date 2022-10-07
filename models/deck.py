@@ -3,24 +3,28 @@ from models.card import As, LetterCard, NumberCard
 
 
 class Deck:
-    def __init__(self):
-        self.cards = [
-            As(), #As
-            As(), #As
-            As(), #As
-            As(), #As
-            LetterCard('J'), #J
-            LetterCard('J'), #J
-            LetterCard('J'), #J
-            LetterCard('J'), #J
-            LetterCard('Q'), #Q
-            LetterCard('Q'), #Q
-            LetterCard('Q'), #Q
-            LetterCard('Q'), #Q
-            LetterCard('K'), #K
-            LetterCard('K'), #K
-            LetterCard('K'), #K
-            LetterCard('K'), #K
+    def __init__(self, cards):
+        self.cards = cards
+
+    @classmethod
+    def create(cls):
+        cards = [
+            As(),  # As
+            As(),  # As
+            As(),  # As
+            As(),  # As
+            LetterCard('J'),  # J
+            LetterCard('J'),  # J
+            LetterCard('J'),  # J
+            LetterCard('J'),  # J
+            LetterCard('Q'),  # Q
+            LetterCard('Q'),  # Q
+            LetterCard('Q'),  # Q
+            LetterCard('Q'),  # Q
+            LetterCard('K'),  # K
+            LetterCard('K'),  # K
+            LetterCard('K'),  # K
+            LetterCard('K'),  # K
             NumberCard(2),
             NumberCard(2),
             NumberCard(2),
@@ -58,13 +62,7 @@ class Deck:
             NumberCard(10),
             NumberCard(10),
         ]
-
-        random.shuffle(self.cards)
-
-    def get_cards(self, quantity_cards):
-        cards = []
-        for i in range(quantity_cards):
-            card = self.cards.pop()
-            cards.append(card)
-
+        random.shuffle(cards)
         return cards
+
+

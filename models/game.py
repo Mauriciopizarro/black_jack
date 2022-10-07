@@ -5,13 +5,43 @@ from services.exceptions import GameFinishedError
 
 class Game:
 
-    def __init__(self):
-        self.turn_order = []
-        self.deck = Deck()
-        self.croupier = Croupier()
-        self.game_status = "created"
-        self.players = []
-        self.turn_position = 0
+    def __init__(self, turn_order, deck, game_status, turn_position, _id=None):
+        self.turn_order = turn_order
+        self.deck = deck
+        self.game_status = game_status
+        self.turn_position = turn_position
+        self._id = _id
+
+    @classmethod
+    def create(cls):
+        turn_order = [Croupier.create()]
+        return cls(turn_order=turn_order, deck=Deck.create(), game_status="created", turn_position=0)
+
+    @property
+    def players(self):
+        if len(self.turn_order) == 1:
+            return []
+        return self.turn_order[:-1]
+
+    @property
+    def croupier(self):
+        return self.turn_order[-1]
+
+    def to_json(self):
+        return {
+            "turn_order": [player.to_json() for player in self.turn_order],
+            "deck": [card.to_json() for card in self.deck],
+            "game_status": self.game_status,
+            "turn_position": self.turn_position
+        }
+
+    def get_cards(self, quantity_cards):
+        cards = []
+        for i in range(quantity_cards):
+            card = self.deck.pop()
+            cards.append(card)
+
+        return cards
 
     def change_turn(self):
         self.turn_position += 1
@@ -30,8 +60,7 @@ class Game:
         if len(self.players) >= 3:
             raise IncorrectPlayersQuantity()
 
-        self.players.append(player)
-        self.turn_order.append(player)
+        self.turn_order.insert(0, player)
 
     def all_players_over_the_limit(self):
         for player in self.players:
@@ -88,11 +117,9 @@ class Game:
         if self.game_status == "finished":
             raise GameNeedToBeRestarted()
 
-        for player in self.players:
-            player.receive_cards(self.deck.get_cards(2))
+        for player in self.turn_order:
+            player.receive_cards(self.get_cards(2))
 
-        self.croupier.receive_cards(self.deck.get_cards(2))
-        self.turn_order.append(self.croupier)
         self.game_status = "started"
         self.turn_order[0].set_as_playing()
 
@@ -108,7 +135,7 @@ class Game:
             raise IncorrectPlayerTurn()
 
         player = self.turn_order[self.turn_position]
-        player.receive_cards(self.deck.get_cards(1))
+        player.receive_cards(self.get_cards(1))
 
         if player.is_over_limit():
             player.set_as_looser()
@@ -148,7 +175,7 @@ class Game:
 
         self.croupier.has_hidden_card = False
         while not self.is_there_winner():
-            self.croupier.receive_cards(self.deck.get_cards(1))
+            self.croupier.receive_cards(self.get_cards(1))
 
     def get_status(self):
         if self.game_status == "created":

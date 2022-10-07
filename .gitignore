@@ -193,3 +193,5 @@ fabric.properties
 
 black_jack_users.json.lock
 black_jack_users.json
+black_jack_game.json
+black_jack_game.json.lock

@@ -3,11 +3,23 @@ from models.card import As
 
 class Player:
 
-    def __init__(self, name, user_id):
-        self.cards = []
+    def __init__(self, name, user_id, cards, status):
+        self.cards = cards
         self.name = name
         self.player_id = user_id
-        self.__status = "waiting_turn"
+        self.status = status
+
+    def to_json(self):
+        return {
+            "cards": [card.to_json() for card in self.cards],
+            "name": self.name,
+            "player_id": self.player_id,
+            "status": self.status
+        }
+
+    @classmethod
+    def create(cls, name, user_id):
+        return cls(cards=[], name=name, user_id=user_id, status="waiting_turn")
 
     def receive_cards(self, new_cards):
         self.cards.extend(new_cards)
@@ -43,19 +55,19 @@ class Player:
         return total_points_list
 
     def is_stand(self):
-        return self.__status == "waiting_croupier"
+        return self.status == "waiting_croupier"
 
     def stand(self):
-        self.__status = "waiting_croupier"
+        self.status = "waiting_croupier"
 
     def set_as_winner(self):
-        self.__status = "winner"
+        self.status = "winner"
 
     def set_as_playing(self):
-        self.__status = "playing"
+        self.status = "playing"
 
     def set_as_looser(self):
-        self.__status = "looser"
+        self.status = "looser"
 
     def is_over_limit(self):
         points = self.get_total_points()
@@ -69,15 +81,25 @@ class Player:
             'name': self.name,
             'cards': self.get_cards_symbols(),
             'total_points': self.get_possible_points(),
-            'status': self.__status,
+            'status': self.status,
             'is_stand': self.is_stand()
         }
 
 
 class Croupier(Player):
-    def __init__(self):
-        super(Croupier, self).__init__('Croupier', None)
-        self.has_hidden_card = True
+    def __init__(self, name, user_id, cards, status, has_hidden_card):
+        super(Croupier, self).__init__(name, user_id, cards, status)
+        self.has_hidden_card = has_hidden_card
+
+    @classmethod
+    def create(cls, name=None, user_id=None):
+        return cls("Croupier", None, cards=[], status="waiting_turn", has_hidden_card=True)
+
+    def to_json(self):
+        player_json = super(Croupier, self).to_json()
+        player_json["has_hidden_card"] = self.has_hidden_card
+        player_json["player_id"] = "None"
+        return player_json
 
     def get_cards_symbols(self):
         cards_values = super(Croupier, self).get_cards_symbols()
