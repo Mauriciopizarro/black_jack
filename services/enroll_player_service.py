@@ -1,23 +1,23 @@
 
 from models.player import Player
-from repositories.game_repository import GameRepository
+from repositories.game_pyson_repository import GamePysonRepository
 from services.exceptions import NotCreatedGame
 
 
 class EnrollPlayerService:
 
     def __init__(self):
-        self.game_repository = GameRepository.get_instance()
+        self.game_repository = GamePysonRepository.get_instance()
         self.player_id_created = None
 
-    def enroll_player(self, player_name, player_id):
+    def enroll_player(self, player_name, player_id, game_id):
 
-        game = self.game_repository.get_game()
+        game = self.game_repository.get_game(game_id)
 
         if not game:
             raise NotCreatedGame()
 
-        player = Player(player_name, player_id)
+        player = Player.create(player_name, player_id)
         game.enroll_player(player)
-        self.game_repository.save(game)
+        self.game_repository.update(game)
         return player.player_id

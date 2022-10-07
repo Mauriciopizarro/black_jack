@@ -2,6 +2,13 @@ class Card:
     value = None
     symbol = None
 
+    def to_json(self):
+        return {
+            "value": self.value,
+            "symbol": self.symbol,
+            "type": self.__class__.__name__
+        }
+
 
 class NumberCard(Card):
     def __init__(self, value):

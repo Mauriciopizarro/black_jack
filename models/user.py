@@ -1,5 +1,4 @@
 from typing import Optional
-
 from pydantic import BaseModel, validator
 from passlib.context import CryptContext
 

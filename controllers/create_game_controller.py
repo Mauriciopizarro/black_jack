@@ -8,7 +8,8 @@ game_service = CreateGameService()
 
 @router.post("/create_game")
 async def create_game():
-    game_service.create_game()
+    game = game_service.create_game()
     return {
-        "message": "Game created"
+        "message": "Game created",
+        "id": game._id
     }

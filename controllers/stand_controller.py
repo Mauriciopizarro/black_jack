@@ -10,10 +10,10 @@ router = APIRouter()
 stand_service = StandService()
 
 
-@router.post("/stand")
-async def stand_controller(current_user: User = Depends(authenticate_with_token)):
+@router.post("/stand/{game_id}")
+async def stand_controller(game_id: int, current_user: User = Depends(authenticate_with_token)):
     try:
-        stand_service.stand(current_user.id)
+        stand_service.stand(current_user.id, game_id)
 
     except NotCreatedGame:
         raise HTTPException(
