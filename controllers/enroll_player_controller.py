@@ -4,7 +4,7 @@ from controllers.utils import authenticate_with_token
 from models.game import IncorrectPlayersQuantity, AlreadyEnrolledPlayer, CantEnrollPlayersStartedGame
 from models.user import User
 from services.enroll_player_service import EnrollPlayerService
-from services.exceptions import NotCreatedGame
+from services.exceptions import GameFinishedError, IncorrectGameID
 
 enroll_player_service = EnrollPlayerService()
 router = APIRouter()
@@ -29,13 +29,17 @@ async def enroll_player(game_id: int, current_user: User = Depends(authenticate_
         raise HTTPException(
             status_code=400, detail='Only 3 players be allowed to play'
         )
+    except IncorrectGameID:
+        raise HTTPException(
+            status_code=404, detail='game_id not found',
+        )
+    except GameFinishedError:
+        raise HTTPException(
+            status_code=400, detail='The game_id entered are finished',
+        )
     except CantEnrollPlayersStartedGame:
         raise HTTPException(
             status_code=400, detail='Can not enroll players in game started'
-        )
-    except NotCreatedGame:
-        raise HTTPException(
-            status_code=400, detail='Not game created'
         )
     except AlreadyEnrolledPlayer:
         raise HTTPException(

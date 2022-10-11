@@ -49,6 +49,8 @@ class Game:
         player.set_as_playing()
 
     def enroll_player(self, player):
+        if self.game_status == "finished":
+            raise GameFinishedError()
         if self.game_status != "created":
             raise CantEnrollPlayersStartedGame()
 
@@ -108,14 +110,14 @@ class Game:
         return str(player.player_id)
 
     def start(self):
+        if self.game_status == "finished":
+            raise GameFinishedError()
+
         if len(self.players) == 0:
-            raise NotPlayersCreated()
+            raise NotPlayersEnrolled()
 
         if self.game_status == "started":
             raise GameAlreadyStarted()
-
-        if self.game_status == "finished":
-            raise GameNeedToBeRestarted()
 
         for player in self.turn_order:
             player.receive_cards(self.get_cards(2))
@@ -127,6 +129,9 @@ class Game:
         return str(player_id) == self.get_playerId_of_current_turn()
 
     def deal_card_to_current_turn_player(self, player_id):
+
+        if self.game_status == "finished":
+            raise GameFinishedError()
 
         if self.game_status != "started":
             raise NotStartedGame()
@@ -144,6 +149,10 @@ class Game:
         self.all_players_over_the_limit()
 
     def stand_current_turn_player(self, player_id):
+
+        if self.game_status == "finished":
+            raise GameFinishedError()
+
         if self.game_status != "started":
             raise NotStartedGame()
 
@@ -165,10 +174,10 @@ class Game:
         return False
 
     def croupier_play(self):
-        if self.game_status != "started":
-            raise NotStartedGame()
         if self.game_status == "finished":
             raise GameFinishedError()
+        if self.game_status != "started":
+            raise NotStartedGame()
         current_player_id = self.get_playerId_of_current_turn()
         if not current_player_id == str(self.croupier.player_id):
             raise NotCroupierTurnError()
@@ -205,15 +214,11 @@ class NotCroupierTurnError(Exception):
     pass
 
 
-class NotPlayersCreated(Exception):
+class NotPlayersEnrolled(Exception):
     pass
 
 
 class GameAlreadyStarted(Exception):
-    pass
-
-
-class GameNeedToBeRestarted(Exception):
     pass
 
 

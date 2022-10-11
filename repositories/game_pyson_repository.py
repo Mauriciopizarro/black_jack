@@ -3,6 +3,7 @@ from pysondb import db
 from models.card import NumberCard, As, LetterCard
 from models.game import Game
 from models.player import Player, Croupier
+from services.exceptions import IncorrectGameID
 
 
 class GamePysonRepository:
@@ -19,15 +20,17 @@ class GamePysonRepository:
 
     def get_game(self, _id):
         query_result = self.db.getBy({"id": _id})
+        if not query_result:
+            raise IncorrectGameID()
         game_dict = query_result[0]
         json.dumps(game_dict)
+        game_status = game_dict["game_status"]
         deck = []
         turn_order = []
-        for card in game_dict["deck"]:
-            deck.append(self.get_card_object(card))
-        game_status = game_dict["game_status"]
         turn_position = game_dict["turn_position"]
         croupier = game_dict["turn_order"].pop()
+        for card in game_dict["deck"]:
+            deck.append(self.get_card_object(card))
         for player in game_dict["turn_order"]:
             turn_order.append(self.get_player_object(player, False))
         turn_order.append(self.get_player_object(croupier, True))

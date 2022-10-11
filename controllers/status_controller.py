@@ -1,5 +1,5 @@
 from models.game import NotStartedGame
-from services.exceptions import NotCreatedGame
+from services.exceptions import IncorrectGameID
 from services.status_service import StatusService
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
@@ -38,9 +38,9 @@ async def get_status_controller(game_id: int):
     try:
         player_status_json = get_status_service.players_status(game_id)
         return player_status_json
-    except NotCreatedGame:
+    except IncorrectGameID:
         raise HTTPException(
-            status_code=400, detail='There is not game created'
+            status_code=404, detail='game_id not found',
         )
     except NotStartedGame:
         raise HTTPException(

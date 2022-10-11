@@ -2,9 +2,9 @@
 from controllers.utils import authenticate_with_token
 from models.game import NotStartedGame, IncorrectPlayerTurn
 from models.user import User
-from services.stand_service import StandService, EmptyPlayerID
+from services.stand_service import StandService
 from fastapi import APIRouter, HTTPException, Depends
-from services.exceptions import NotCreatedGame, GameFinishedError
+from services.exceptions import GameFinishedError, IncorrectGameID
 
 router = APIRouter()
 stand_service = StandService()
@@ -14,18 +14,13 @@ stand_service = StandService()
 async def stand_controller(game_id: int, current_user: User = Depends(authenticate_with_token)):
     try:
         stand_service.stand(current_user.id, game_id)
-
-    except NotCreatedGame:
+    except IncorrectGameID:
         raise HTTPException(
-            status_code=400, detail='There is not game created',
+            status_code=404, detail='game_id not found',
         )
     except GameFinishedError:
         raise HTTPException(
-            status_code=400, detail='The game is finished',
-        )
-    except EmptyPlayerID:
-        raise HTTPException(
-            status_code=400, detail='To use this resource is necessary to enter the player_id',
+            status_code=400, detail='The game_id entered are finished',
         )
     except IncorrectPlayerTurn:
         raise HTTPException(
