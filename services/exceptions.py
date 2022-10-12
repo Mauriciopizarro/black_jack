@@ -1,6 +1,6 @@
-class NotCreatedGame(Exception):
+class GameFinishedError(Exception):
     pass
 
 
-class GameFinishedError(Exception):
+class IncorrectGameID(Exception):
     pass

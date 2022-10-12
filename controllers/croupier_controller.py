@@ -1,11 +1,10 @@
 from models.game import NotCroupierTurnError, NotStartedGame
 from services.croupier_service import (
     CroupierService,
-    NotCreatedGame,
 )
 
 from fastapi import APIRouter, HTTPException
-from services.exceptions import GameFinishedError
+from services.exceptions import GameFinishedError, IncorrectGameID
 
 croupier_service = CroupierService()
 router = APIRouter()
@@ -19,16 +18,16 @@ async def croupier_controller(game_id: int):
         raise HTTPException(
             status_code=400, detail='Is not the croupier turn',
         )
-    except NotCreatedGame:
+    except IncorrectGameID:
         raise HTTPException(
-            status_code=400, detail='There is not game created',
+            status_code=404, detail='game_id not found',
         )
     except GameFinishedError:
         raise HTTPException(
-            status_code=400, detail='The game is finished',
+            status_code=400, detail='The game_id entered is finished',
         )
     except NotStartedGame:
         raise HTTPException(
-            status_code=400, detail='The game is not started',
+            status_code=400, detail='Game not started',
         )
     return {'message': "Croupier is playing"}
