@@ -17,10 +17,6 @@ class Player:
             "status": self.status
         }
 
-    @classmethod
-    def create(cls, name, user_id):
-        return cls(cards=[], name=name, user_id=user_id, status="waiting_turn")
-
     def receive_cards(self, new_cards):
         self.cards.extend(new_cards)
 
@@ -90,10 +86,6 @@ class Croupier(Player):
     def __init__(self, name, user_id, cards, status, has_hidden_card):
         super(Croupier, self).__init__(name, user_id, cards, status)
         self.has_hidden_card = has_hidden_card
-
-    @classmethod
-    def create(cls, name=None, user_id=None):
-        return cls("Croupier", None, cards=[], status="waiting_turn", has_hidden_card=True)
 
     def to_json(self):
         player_json = super(Croupier, self).to_json()
