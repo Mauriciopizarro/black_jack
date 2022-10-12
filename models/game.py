@@ -114,7 +114,7 @@ class Game:
             raise GameFinishedError()
 
         if len(self.players) == 0:
-            raise NotPlayersEnrolled()
+            raise NoPlayersEnrolled()
 
         if self.game_status == "started":
             raise GameAlreadyStarted()
@@ -214,7 +214,7 @@ class NotCroupierTurnError(Exception):
     pass
 
 
-class NotPlayersEnrolled(Exception):
+class NoPlayersEnrolled(Exception):
     pass
 
 

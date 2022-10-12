@@ -1,4 +1,4 @@
-from models.game import NotPlayersEnrolled, GameAlreadyStarted
+from models.game import NoPlayersEnrolled, GameAlreadyStarted
 from services.exceptions import GameFinishedError, IncorrectGameID
 from services.start_game_service import StartGameService
 from fastapi import APIRouter, HTTPException
@@ -11,7 +11,7 @@ star_game_service = StartGameService()
 def start_game(game_id: int):
     try:
         star_game_service.start_game(game_id)
-    except NotPlayersEnrolled:
+    except NoPlayersEnrolled:
         raise HTTPException(
             status_code=400, detail='There is not players enrolled'
         )
@@ -25,6 +25,6 @@ def start_game(game_id: int):
         )
     except GameFinishedError:
         raise HTTPException(
-            status_code=400, detail='The game_id entered are finished'
+            status_code=400, detail='The game_id entered is finished'
         )
     return {'message': "Game started"}

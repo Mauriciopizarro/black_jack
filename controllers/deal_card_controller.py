@@ -19,7 +19,7 @@ async def deal_card_controller(game_id: int, current_user: User = Depends(authen
         )
     except GameFinishedError:
         raise HTTPException(
-            status_code=400, detail='The game_id entered are finished'
+            status_code=400, detail='The game_id entered is finished'
         )
     except IncorrectPlayerTurn:
         raise HTTPException(

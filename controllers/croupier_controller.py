@@ -24,7 +24,7 @@ async def croupier_controller(game_id: int):
         )
     except GameFinishedError:
         raise HTTPException(
-            status_code=400, detail='The game_id entered are finished',
+            status_code=400, detail='The game_id entered is finished',
         )
     except NotStartedGame:
         raise HTTPException(

@@ -35,7 +35,7 @@ async def enroll_player(game_id: int, current_user: User = Depends(authenticate_
         )
     except GameFinishedError:
         raise HTTPException(
-            status_code=400, detail='The game_id entered are finished',
+            status_code=400, detail='The game_id entered is finished',
         )
     except CantEnrollPlayersStartedGame:
         raise HTTPException(
