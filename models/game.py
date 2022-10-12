@@ -1,5 +1,3 @@
-from models.deck import Deck
-from models.player import Croupier
 from services.exceptions import GameFinishedError
 
 
@@ -11,11 +9,6 @@ class Game:
         self.game_status = game_status
         self.turn_position = turn_position
         self._id = _id
-
-    @classmethod
-    def create(cls):
-        turn_order = [Croupier.create()]
-        return cls(turn_order=turn_order, deck=Deck.create(), game_status="created", turn_position=0)
 
     @property
     def players(self):
