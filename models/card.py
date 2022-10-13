@@ -1,28 +1,28 @@
-class Card:
-    value = None
-    symbol = None
+from typing import Optional, ClassVar
+from pydantic import BaseModel
 
-    def to_json(self):
-        return {
-            "value": self.value,
-            "symbol": self.symbol,
-            "type": self.__class__.__name__
-        }
+
+class Card(BaseModel):
+    value: Optional[int] = None
+    symbol: Optional[str] = None
+
+    def dict(self, *arg, **kwargs):
+        card_dict = super(Card, self).dict()
+        card_dict["type"] = self.__class__.__name__
+        return card_dict
 
 
 class NumberCard(Card):
     def __init__(self, value):
-        self.value = value
-        self.symbol = str(value)
+        super(NumberCard, self).__init__(value=value, symbol=str(value))
 
 
 class LetterCard(Card):
     def __init__(self, symbol):
-        self.value = 10
-        self.symbol = symbol
+        super(LetterCard, self).__init__(value=10, symbol=str(symbol))
 
 
 class As(Card):
-    value = 1
-    special_value = 10
-    symbol = 'A'
+    value: int = 1
+    special_value: ClassVar[int] = 10
+    symbol: str = 'A'

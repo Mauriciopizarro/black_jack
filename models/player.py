@@ -1,21 +1,13 @@
-from models.card import As
+from models.card import As, Card
+from typing import List, Optional
+from pydantic import BaseModel
 
 
-class Player:
-
-    def __init__(self, name, user_id, cards, status):
-        self.cards = cards
-        self.name = name
-        self.player_id = user_id
-        self.status = status
-
-    def to_json(self):
-        return {
-            "cards": [card.to_json() for card in self.cards],
-            "name": self.name,
-            "player_id": self.player_id,
-            "status": self.status
-        }
+class Player(BaseModel):
+    cards: List[Card]
+    name: str
+    player_id: int
+    status: str
 
     def receive_cards(self, new_cards):
         self.cards.extend(new_cards)
@@ -83,15 +75,9 @@ class Player:
 
 
 class Croupier(Player):
-    def __init__(self, name, user_id, cards, status, has_hidden_card):
-        super(Croupier, self).__init__(name, user_id, cards, status)
-        self.has_hidden_card = has_hidden_card
+    has_hidden_card: bool
+    player_id: Optional[int] = None
 
-    def to_json(self):
-        player_json = super(Croupier, self).to_json()
-        player_json["has_hidden_card"] = self.has_hidden_card
-        player_json["player_id"] = "None"
-        return player_json
 
     def get_cards_symbols(self):
         cards_values = super(Croupier, self).get_cards_symbols()

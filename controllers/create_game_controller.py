@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-
 from services.create_game_service import CreateGameService
 
 router = APIRouter()
@@ -11,5 +10,5 @@ async def create_game():
     game = game_service.create_game()
     return {
         "message": "Game created",
-        "id": game._id
+        "id": game.game_id
     }

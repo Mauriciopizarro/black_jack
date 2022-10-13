@@ -18,8 +18,8 @@ class GamePysonRepository:
 
         return cls.instance
 
-    def get_game(self, _id):
-        query_result = self.db.getBy({"id": _id})
+    def get_game(self, game_id):
+        query_result = self.db.getBy({"id": game_id})
         if not query_result:
             raise IncorrectGameID()
         game_dict = query_result[0]
@@ -34,7 +34,7 @@ class GamePysonRepository:
         for player in game_dict["turn_order"]:
             turn_order.append(self.get_player_object(player, False))
         turn_order.append(self.get_player_object(croupier, True))
-        game = Game(turn_order, deck, game_status, turn_position, _id)
+        game = Game(turn_order=turn_order, deck=deck, game_status=game_status, turn_position=turn_position, game_id=game_id)
         return game
 
     def get_player_object(self, player_dict, is_croupier):
@@ -42,12 +42,12 @@ class GamePysonRepository:
             player_cards = []
             for card in player_dict["cards"]:
                 player_cards.append(self.get_card_object(card))
-            return Player(player_dict["name"], player_dict["player_id"], player_cards, player_dict["status"])
+            return Player(name=player_dict["name"], player_id=player_dict["player_id"], cards=player_cards, status=player_dict["status"])
 
         player_cards = []
         for card in player_dict["cards"]:
             player_cards.append(self.get_card_object(card))
-        return Croupier(player_dict["name"], player_dict["player_id"], player_cards, player_dict["status"], player_dict["has_hidden_card"])
+        return Croupier(name=player_dict["name"], cards=player_cards, status=player_dict["status"], has_hidden_card=player_dict["has_hidden_card"])
 
     def get_card_object(self, card_dict):
         if card_dict["type"] == "NumberCard":
@@ -58,9 +58,9 @@ class GamePysonRepository:
             return As()
 
     def save(self, game: Game) -> Game:
-        game_id = self.db.add(game.to_json())
-        return Game(game.turn_order, game.deck, game.game_status, game.turn_position, game_id)
+        game_id = self.db.add(game.dict())
+        return Game(turn_order=game.turn_order, deck=game.deck, game_status=game.game_status, turn_position=game.turn_position, game_id=game_id)
 
     def update(self, game: Game) -> Game:
-        self.db.updateById(game._id, game.to_json())
-        return Game(game.turn_order, game.deck, game.game_status, game.turn_position, game._id)
+        self.db.updateById(game.game_id, game.dict())
+        return Game(turn_order=game.turn_order, deck=game.deck, game_status=game.game_status, turn_position=game.turn_position, game_id=game.game_id)

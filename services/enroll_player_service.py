@@ -11,7 +11,7 @@ class EnrollPlayerService:
 
     def enroll_player(self, player_name, player_id, game_id):
         game = self.game_repository.get_game(game_id)
-        player = Player(cards=[], name=player_name, user_id=player_id, status="waiting_turn")
+        player = Player(cards=[], name=player_name, player_id=player_id, status="waiting_turn")
         game.enroll_player(player)
         self.game_repository.update(game)
         return player.player_id
