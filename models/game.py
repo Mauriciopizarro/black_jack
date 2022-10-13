@@ -1,14 +1,16 @@
+from models.card import Card
+from models.player import Player
 from services.exceptions import GameFinishedError
+from typing import Optional, List
+from pydantic import BaseModel
 
 
-class Game:
-
-    def __init__(self, turn_order, deck, game_status, turn_position, _id=None):
-        self.turn_order = turn_order
-        self.deck = deck
-        self.game_status = game_status
-        self.turn_position = turn_position
-        self._id = _id
+class Game(BaseModel):
+    turn_order: List[Player]
+    deck: List[Card]
+    game_status: str
+    turn_position: int
+    game_id: Optional[int] = None
 
     @property
     def players(self):
@@ -20,13 +22,10 @@ class Game:
     def croupier(self):
         return self.turn_order[-1]
 
-    def to_json(self):
-        return {
-            "turn_order": [player.to_json() for player in self.turn_order],
-            "deck": [card.to_json() for card in self.deck],
-            "game_status": self.game_status,
-            "turn_position": self.turn_position
-        }
+    def dict(self, *arg, **kwargs):
+        game_dict = super(Game, self).dict()
+        game_dict.pop("game_id")
+        return game_dict
 
     def get_cards(self, quantity_cards):
         cards = []

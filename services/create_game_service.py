@@ -11,11 +11,11 @@ class CreateGameService:
         self.game_repository = GamePysonRepository.get_instance()
 
     def create_game(self):
-        croupier = Croupier("Croupier", None, cards=[], status="waiting_turn", has_hidden_card=True)
+        croupier = Croupier(name="Croupier", cards=[], status="waiting_turn", has_hidden_card=True)
         turn_order = [croupier]
         game = Game(turn_order=turn_order, deck=self.create_deck(), game_status="created", turn_position=0)
-        game_id = self.game_repository.save(game)
-        return game_id
+        response_game = self.game_repository.save(game)
+        return response_game
 
     @staticmethod
     def create_deck():
