@@ -78,7 +78,6 @@ class Croupier(Player):
     has_hidden_card: bool
     player_id: Optional[int] = None
 
-
     def get_cards_symbols(self):
         cards_values = super(Croupier, self).get_cards_symbols()
         if self.has_hidden_card:

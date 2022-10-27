@@ -1,8 +1,7 @@
 from pydantic import BaseModel
 from fastapi import HTTPException, APIRouter
-
 from models.user import EmptyPasswordError
-from repositories.user_pyson_repository import UserExistent
+from repositories.user.user_pyson_repository import UserExistent
 from services.sign_up_service import SignUpService
 
 router = APIRouter()

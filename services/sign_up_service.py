@@ -1,11 +1,15 @@
+from dependency_injector.wiring import Provide, inject
+from injector import Injector
 from models.user import UserPlainPassword
-from repositories.user_pyson_repository import UserPysonRepository
+from repositories.user.user_repository import UserRepository
 from services.token_service import TokenService
 
 
 class SignUpService:
-    def __init__(self):
-        self.user_repository = UserPysonRepository.get_instance()
+
+    @inject
+    def __init__(self, user_repository: UserRepository = Provide[Injector.user_repo]):
+        self.user_repository = user_repository
 
     def sign_up(self, username, plain_password):
         user = UserPlainPassword(username=username, plain_password=plain_password)

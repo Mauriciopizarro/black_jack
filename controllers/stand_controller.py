@@ -1,4 +1,3 @@
-
 from controllers.utils import authenticate_with_token
 from models.game import NotStartedGame, IncorrectPlayerTurn
 from models.user import User

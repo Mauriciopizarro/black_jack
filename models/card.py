@@ -6,7 +6,7 @@ class Card(BaseModel):
     value: Optional[int] = None
     symbol: Optional[str] = None
 
-    def dict(self, *arg, **kwargs):
+    def dict(self, *args, **kwargs):
         card_dict = super(Card, self).dict()
         card_dict["type"] = self.__class__.__name__
         return card_dict

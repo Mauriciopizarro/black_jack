@@ -1,11 +1,14 @@
 from pysondb import db
-from models.user import UserInDB, NotExistentUser, UserPlainPassword
+from models.user import UserInDB, UserPlainPassword
+from repositories.user.user_repository import UserRepository
 
 
-class UserPysonRepository:
+class UserPysonRepository(UserRepository):
     instance = None
 
-    # Patron singleton
+    def __init__(self):
+        self.user_db = db.getDb("black_jack_users.json")
+
     @classmethod
     def get_instance(cls):
         if not cls.instance:
@@ -16,7 +19,7 @@ class UserPysonRepository:
 
     def get_by_username(self, username):
         query_result = self.user_db.getBy({"username": username})
-        if len(query_result) == 0:
+        if not query_result:
             raise NotExistentUser()
         user_dict = query_result[0]
         return UserInDB(**user_dict)
@@ -31,4 +34,8 @@ class UserPysonRepository:
 
 
 class UserExistent(Exception):
+    pass
+
+
+class NotExistentUser(Exception):
     pass

@@ -3,11 +3,15 @@ from pysondb import db
 from models.card import NumberCard, As, LetterCard
 from models.game import Game
 from models.player import Player, Croupier
+from repositories.game.game_repository import GameRepository
 from services.exceptions import IncorrectGameID
 
 
-class GamePysonRepository:
+class GamePysonRepository(GameRepository):
     instance = None
+
+    def __init__(self):
+        self.db = db.getDb("black_jack_game.json")
 
     # Patron singleton
     @classmethod
@@ -18,7 +22,7 @@ class GamePysonRepository:
 
         return cls.instance
 
-    def get_game(self, game_id):
+    def get(self, game_id) -> Game:
         query_result = self.db.getBy({"id": game_id})
         if not query_result:
             raise IncorrectGameID()
@@ -37,6 +41,14 @@ class GamePysonRepository:
         game = Game(turn_order=turn_order, deck=deck, game_status=game_status, turn_position=turn_position, game_id=game_id)
         return game
 
+    def save(self, game: Game) -> Game:
+        game_id = self.db.add(game.dict())
+        return Game(turn_order=game.turn_order, deck=game.deck, game_status=game.game_status, turn_position=game.turn_position, game_id=game_id)
+
+    def update(self, game: Game) -> Game:
+        self.db.updateById(game.game_id, game.dict())
+        return Game(turn_order=game.turn_order, deck=game.deck, game_status=game.game_status, turn_position=game.turn_position, game_id=game.game_id)
+
     def get_player_object(self, player_dict, is_croupier):
         if not is_croupier:
             player_cards = []
@@ -49,18 +61,11 @@ class GamePysonRepository:
             player_cards.append(self.get_card_object(card))
         return Croupier(name=player_dict["name"], cards=player_cards, status=player_dict["status"], has_hidden_card=player_dict["has_hidden_card"])
 
-    def get_card_object(self, card_dict):
+    @staticmethod
+    def get_card_object(card_dict):
         if card_dict["type"] == "NumberCard":
             return NumberCard(card_dict["value"])
         elif card_dict["type"] == "LetterCard":
             return LetterCard(card_dict["symbol"])
         elif card_dict["type"] == "As":
             return As()
-
-    def save(self, game: Game) -> Game:
-        game_id = self.db.add(game.dict())
-        return Game(turn_order=game.turn_order, deck=game.deck, game_status=game.game_status, turn_position=game.turn_position, game_id=game_id)
-
-    def update(self, game: Game) -> Game:
-        self.db.updateById(game.game_id, game.dict())
-        return Game(turn_order=game.turn_order, deck=game.deck, game_status=game.game_status, turn_position=game.turn_position, game_id=game.game_id)

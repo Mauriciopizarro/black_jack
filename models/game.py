@@ -141,7 +141,6 @@ class Game(BaseModel):
         self.all_players_over_the_limit()
 
     def stand_current_turn_player(self, player_id):
-
         if self.game_status == "finished":
             raise GameFinishedError()
 
@@ -156,7 +155,6 @@ class Game(BaseModel):
         self.change_turn()
 
     def is_there_winner(self):
-
         if self.check_croupier_defeat():
             return True
 

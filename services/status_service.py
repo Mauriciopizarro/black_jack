@@ -1,11 +1,14 @@
-from repositories.game_pyson_repository import GamePysonRepository
+from dependency_injector.wiring import inject, Provide
+from injector import Injector
+from repositories.game.game_repository import GameRepository
 
 
 class StatusService:
 
-    def __init__(self):
-        self.game_repository = GamePysonRepository.get_instance()
+    @inject
+    def __init__(self, game_repository: GameRepository = Provide[Injector.game_repo]):
+        self.game_repository = game_repository
 
     def players_status(self, game_id):
-        game = self.game_repository.get_game(game_id)
+        game = self.game_repository.get(game_id)
         return game.get_status()

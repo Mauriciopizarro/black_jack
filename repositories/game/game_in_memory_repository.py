@@ -1,4 +1,7 @@
-class GameRepository:
+from repositories.game.game_repository import GameRepository
+
+
+class GameInMemoryRepository(GameRepository):
     game = None
     instance = None
 
@@ -11,5 +14,8 @@ class GameRepository:
     def save(self, game):
         self.game = game
 
-    def get_game(self):
+    def get(self, game_id):
+        return self.game
+
+    def update(self, game):
         return self.game

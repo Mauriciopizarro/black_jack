@@ -1,16 +1,18 @@
-
+from dependency_injector.wiring import inject, Provide
+from injector import Injector
 from models.player import Player
-from repositories.game_pyson_repository import GamePysonRepository
+from repositories.game.game_repository import GameRepository
 
 
 class EnrollPlayerService:
 
-    def __init__(self):
-        self.game_repository = GamePysonRepository.get_instance()
+    @inject
+    def __init__(self, game_repository: GameRepository = Provide[Injector.game_repo]):
+        self.game_repository = game_repository
         self.player_id_created = None
 
     def enroll_player(self, player_name, player_id, game_id):
-        game = self.game_repository.get_game(game_id)
+        game = self.game_repository.get(game_id)
         player = Player(cards=[], name=player_name, player_id=player_id, status="waiting_turn")
         game.enroll_player(player)
         self.game_repository.update(game)
