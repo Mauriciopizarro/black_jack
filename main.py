@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-import injector
-from controllers import (
+import infrastructure.injector
+from infrastructure.controllers import (
     enroll_player_controller,
     start_game_controller,
     status_controller,
@@ -11,7 +11,6 @@ from controllers import (
     sign_up_controller,
     create_game_controller
 )
-
 
 app = FastAPI()
 
