@@ -1,4 +1,4 @@
-from infrastructure.repositories.game.game_repository import GameRepository
+from domain.interfaces.game_repository import GameRepository
 
 
 class GameInMemoryRepository(GameRepository):

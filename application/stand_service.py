@@ -1,6 +1,6 @@
 from dependency_injector.wiring import Provide, inject
 from infrastructure.injector import Injector
-from infrastructure.repositories.game.game_repository import GameRepository
+from domain.interfaces.game_repository import GameRepository
 
 
 class StandService:

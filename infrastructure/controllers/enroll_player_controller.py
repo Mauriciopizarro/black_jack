@@ -3,9 +3,8 @@ from fastapi import APIRouter, HTTPException, Depends
 from application.enroll_player_service import EnrollPlayerService
 from application.exceptions import IncorrectGameID, GameFinishedError
 from domain.game import IncorrectPlayersQuantity, CantEnrollPlayersStartedGame, AlreadyEnrolledPlayer
-from infrastructure.controllers.utils import authenticate_with_token
 from domain.user import User
-
+from infrastructure.authentication.fast_api_authentication import authenticate_with_token
 
 enroll_player_service = EnrollPlayerService()
 router = APIRouter()

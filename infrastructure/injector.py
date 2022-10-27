@@ -1,3 +1,4 @@
+from infrastructure.authentication.local_auth_provider import LocalAuthProvider
 from infrastructure.repositories.game.game_pyson_repository import GamePysonRepository
 from infrastructure.repositories.user.user_pyson_repository import UserPysonRepository
 from dependency_injector import containers, providers
@@ -5,8 +6,9 @@ from dependency_injector import containers, providers
 
 class Injector(containers.DeclarativeContainer):
 
-    user_repo = providers.Factory(UserPysonRepository)
+    user_repo = providers.Singleton(UserPysonRepository)
     game_repo = providers.Singleton(GamePysonRepository)
+    auth_provider = providers.Factory(LocalAuthProvider)
 
 
 injector = Injector()

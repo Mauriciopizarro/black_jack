@@ -1,10 +1,9 @@
 from application.deal_card_service import DealCardService
 from application.exceptions import IncorrectGameID, GameFinishedError
 from domain.game import NotStartedGame, IncorrectPlayerTurn
-from infrastructure.controllers.utils import authenticate_with_token
 from domain.user import User
 from fastapi import APIRouter, HTTPException, Depends
-
+from infrastructure.authentication.fast_api_authentication import authenticate_with_token
 
 deal_card_service = DealCardService()
 router = APIRouter()

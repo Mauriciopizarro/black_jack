@@ -1,6 +1,6 @@
 import uuid
 from domain.user import UserInDB, UserPlainPassword
-from infrastructure.repositories.user.user_repository import UserRepository
+from domain.interfaces.user_repository import UserRepository
 from infrastructure.repositories.user.user_pyson_repository import NotExistentUser
 
 fake_users_db = {

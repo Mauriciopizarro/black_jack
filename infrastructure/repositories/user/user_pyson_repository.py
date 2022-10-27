@@ -1,6 +1,6 @@
 from pysondb import db
 from domain.user import UserInDB, UserPlainPassword
-from infrastructure.repositories.user.user_repository import UserRepository
+from domain.interfaces.user_repository import UserRepository
 
 
 class UserPysonRepository(UserRepository):

@@ -4,7 +4,7 @@ from infrastructure.injector import Injector
 from domain.card import As, LetterCard, NumberCard
 from domain.game import Game
 from domain.player import Croupier
-from infrastructure.repositories.game.game_repository import GameRepository
+from domain.interfaces.game_repository import GameRepository
 
 
 class CreateGameService:
