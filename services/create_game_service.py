@@ -1,14 +1,17 @@
 import random
+from dependency_injector.wiring import Provide, inject
+from injector import Injector
 from models.card import As, LetterCard, NumberCard
 from models.game import Game
 from models.player import Croupier
-from repositories.game_pyson_repository import GamePysonRepository
+from repositories.game.game_repository import GameRepository
 
 
 class CreateGameService:
 
-    def __init__(self):
-        self.game_repository = GamePysonRepository.get_instance()
+    @inject
+    def __init__(self, game_repository: GameRepository = Provide[Injector.game_repo]):
+        self.game_repository = game_repository
 
     def create_game(self):
         croupier = Croupier(name="Croupier", cards=[], status="waiting_turn", has_hidden_card=True)

@@ -1,10 +1,13 @@
-from repositories.user_pyson_repository import UserPysonRepository
+from dependency_injector.wiring import Provide, inject
+from injector import Injector
+from repositories.user.user_repository import UserRepository
 
 
 class LoginService:
 
-    def __init__(self):
-        self.user_repository = UserPysonRepository.get_instance()
+    @inject
+    def __init__(self, user_repository: UserRepository = Provide[Injector.user_repo]):
+        self.user_repository = user_repository
 
     def authenticate_user(self, username: str, password: str):
         user = self.user_repository.get_by_username(username)

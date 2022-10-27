@@ -1,8 +1,5 @@
 from models.game import NotCroupierTurnError, NotStartedGame
-from services.croupier_service import (
-    CroupierService,
-)
-
+from services.croupier_service import CroupierService
 from fastapi import APIRouter, HTTPException
 from services.exceptions import GameFinishedError, IncorrectGameID
 

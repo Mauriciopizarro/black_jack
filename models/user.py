@@ -36,9 +36,5 @@ class IncorrectPasswordError(Exception):
     pass
 
 
-class NotExistentUser(Exception):
-    pass
-
-
 class EmptyPasswordError(Exception):
     pass

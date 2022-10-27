@@ -1,6 +1,7 @@
 import uuid
-
-from models.user import UserInDB, NotExistentUser
+from models.user import UserInDB, UserPlainPassword
+from repositories.user.user_repository import UserRepository
+from repositories.user.user_pyson_repository import NotExistentUser
 
 fake_users_db = {
     "Mauri": {
@@ -22,7 +23,7 @@ fake_users_db = {
 }
 
 
-class UserRepository:
+class UserInMemoryRepository(UserRepository):
     instance = None
 
     # Patron singleton
@@ -39,3 +40,6 @@ class UserRepository:
 
         user_dict = fake_users_db[username]
         return UserInDB(**user_dict)
+
+    def save_user(self, user: UserPlainPassword) -> UserPlainPassword:
+        pass
