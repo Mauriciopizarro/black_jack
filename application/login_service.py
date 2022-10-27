@@ -1,6 +1,6 @@
 from dependency_injector.wiring import Provide, inject
 from infrastructure.injector import Injector
-from infrastructure.repositories.user.user_repository import UserRepository
+from domain.interfaces.user_repository import UserRepository
 
 
 class LoginService:

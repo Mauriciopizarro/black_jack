@@ -1,7 +1,7 @@
 from dependency_injector.wiring import inject, Provide
 from infrastructure.injector import Injector
 from domain.player import Player
-from infrastructure.repositories.game.game_repository import GameRepository
+from domain.interfaces.game_repository import GameRepository
 
 
 class EnrollPlayerService:

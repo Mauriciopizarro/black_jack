@@ -3,7 +3,7 @@ from pysondb import db
 from domain.card import NumberCard, As, LetterCard
 from domain.game import Game
 from domain.player import Player, Croupier
-from infrastructure.repositories.game.game_repository import GameRepository
+from domain.interfaces.game_repository import GameRepository
 from application.exceptions import IncorrectGameID
 
 

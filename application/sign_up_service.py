@@ -1,8 +1,7 @@
 from dependency_injector.wiring import Provide, inject
-
 from domain.user import UserPlainPassword
 from infrastructure.injector import Injector
-from infrastructure.repositories.user.user_repository import UserRepository
+from domain.interfaces.user_repository import UserRepository
 from application.token_service import TokenService
 
 

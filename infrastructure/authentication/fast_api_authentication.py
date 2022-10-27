@@ -1,21 +1,14 @@
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from application.token_service import TokenService, InvalidTokenError
+from domain.user import UserInDB
 from infrastructure.repositories.user.user_pyson_repository import NotExistentUser
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 
-def ClientErrorResponse(code, description=''):
-    description_dict = {
-        'description': description,
-        'code': code
-    }
-    return description_dict, 400
-
-
-async def authenticate_with_token(token: str = Depends(oauth2_scheme)):
+async def authenticate_with_token(token: str = Depends(oauth2_scheme)) -> UserInDB:
     try:
         return TokenService.get_user_by_token(token)
     except NotExistentUser:

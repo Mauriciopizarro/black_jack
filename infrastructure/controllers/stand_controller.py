@@ -2,9 +2,8 @@ from application.exceptions import IncorrectGameID, GameFinishedError
 from application.stand_service import StandService
 from domain.game import IncorrectPlayerTurn, NotStartedGame
 from domain.user import User
-from infrastructure.controllers.utils import authenticate_with_token
 from fastapi import APIRouter, HTTPException, Depends
-
+from infrastructure.authentication.fast_api_authentication import authenticate_with_token
 
 router = APIRouter()
 stand_service = StandService()
