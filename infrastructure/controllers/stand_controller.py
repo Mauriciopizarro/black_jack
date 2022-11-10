@@ -10,7 +10,7 @@ stand_service = StandService()
 
 
 @router.post("/stand/{game_id}")
-async def stand_controller(game_id: int, current_user: User = Depends(authenticate_with_token)):
+async def stand_controller(game_id: str, current_user: User = Depends(authenticate_with_token)):
     try:
         stand_service.stand(current_user.id, game_id)
     except IncorrectGameID:

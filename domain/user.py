@@ -8,7 +8,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 class User(BaseModel):
     username: str
-    id: Optional[int]
+    id: Optional[str]
 
 
 class UserInDB(User):

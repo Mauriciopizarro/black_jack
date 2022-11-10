@@ -8,7 +8,7 @@ star_game_service = StartGameService()
 
 
 @router.post("/start_game/{game_id}")
-def start_game(game_id: int):
+def start_game(game_id: str):
     try:
         star_game_service.start_game(game_id)
     except NoPlayersEnrolled:

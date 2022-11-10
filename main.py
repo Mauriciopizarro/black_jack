@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-import infrastructure.injector
+import infrastructure.injector # no remove this dependecy
 from infrastructure.controllers import (
     enroll_player_controller,
     start_game_controller,

@@ -6,7 +6,7 @@ from pydantic import BaseModel
 class Player(BaseModel):
     cards: List[Card]
     name: str
-    player_id: int
+    player_id: str
     status: str
 
     def receive_cards(self, new_cards):
