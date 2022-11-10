@@ -10,7 +10,7 @@ class Game(BaseModel):
     deck: List[Card]
     game_status: str
     turn_position: int
-    game_id: Optional[int] = None
+    game_id: Optional[str] = None
 
     @property
     def players(self):

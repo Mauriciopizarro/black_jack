@@ -5,13 +5,13 @@ from application.exceptions import IncorrectGameID
 from application.status_service import StatusService
 from domain.game import NotStartedGame
 
-get_status_service = StatusService()
+status_service = StatusService()
 router = APIRouter()
 
 
 class Player(BaseModel):
     cards: List[str]
-    id: int
+    id: str
     is_stand: bool
     name: str
     status: str
@@ -34,9 +34,9 @@ class StatusResponse(BaseModel):
 
 
 @router.get("/player_status/{game_id}", response_model=StatusResponse)
-async def get_status_controller(game_id: int):
+async def get_status_controller(game_id: str):
     try:
-        player_status_json = get_status_service.players_status(game_id)
+        player_status_json = status_service.players_status(game_id)
         return player_status_json
     except IncorrectGameID:
         raise HTTPException(

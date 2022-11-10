@@ -1,4 +1,5 @@
 from pysondb import db
+from application.exceptions import NotExistentUser, UserExistent
 from domain.user import UserInDB, UserPlainPassword
 from domain.interfaces.user_repository import UserRepository
 
@@ -31,11 +32,3 @@ class UserPysonRepository(UserRepository):
         hashed_password = user.get_hashed_password()
         user_id = self.user_db.add({"username": user.username, "hashed_password": hashed_password})
         return UserInDB(hashed_password=hashed_password, id=user_id, username=user.username)
-
-
-class UserExistent(Exception):
-    pass
-
-
-class NotExistentUser(Exception):
-    pass

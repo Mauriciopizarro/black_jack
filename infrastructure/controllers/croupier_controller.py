@@ -8,7 +8,7 @@ router = APIRouter()
 
 
 @router.post("/croupier_play/{game_id}")
-async def croupier_controller(game_id: int):
+async def croupier_controller(game_id: str):
     try:
         croupier_service.croupier_play(game_id)
     except NotCroupierTurnError:
