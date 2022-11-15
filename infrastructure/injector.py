@@ -1,13 +1,13 @@
 from infrastructure.authentication.local_auth_provider import LocalAuthProvider
-from infrastructure.repositories.game.game_mongo_repository import GameMongoRepository
-from infrastructure.repositories.user.user_mongo_repository import UserMongoRepository
+from infrastructure.repositories.game.game_sql_repository import GameSqlRepository
+from infrastructure.repositories.user.user_sql_repository import UserSqlRepository
 from dependency_injector import containers, providers
 
 
 class Injector(containers.DeclarativeContainer):
 
-    user_repo = providers.Singleton(UserMongoRepository)
-    game_repo = providers.Singleton(GameMongoRepository)
+    user_repo = providers.Singleton(UserSqlRepository)
+    game_repo = providers.Singleton(GameSqlRepository)
     auth_provider = providers.Factory(LocalAuthProvider)
 
 

@@ -10,6 +10,7 @@ services:
       PORT: 5000
     depends_on:
       - mongo
+      - mysql
     stdin_open: true
     tty: true
     volumes:
@@ -22,3 +23,18 @@ services:
       - MONGO_INITDB_DATABASE=blackjack
     ports:
       - "27017:27017"
+
+  mysql:
+    image: mysql:8.0.31
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'blackjack'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'user'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'password'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - '3306:3306'
