@@ -8,6 +8,7 @@ class Player(BaseModel):
     name: str
     player_id: str
     status: str
+    has_hidden_card: Optional[bool]
 
     def receive_cards(self, new_cards):
         self.cards.extend(new_cards)

@@ -10,3 +10,5 @@ python-multipart==0.0.5
 pysondb==1.6.7
 dependency-injector==4.40.0
 pymongo==4.3.2
+SQLAlchemy==1.4.43
+pymysql
