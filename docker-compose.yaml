@@ -18,7 +18,7 @@ services:
      
 
   mongo:
-    image: mongo
+    image: mongo:4.4.18-rc0-focal
     environment:
       - MONGO_INITDB_DATABASE=blackjack
     ports:

@@ -1,15 +1,15 @@
 from fastapi import FastAPI
-import infrastructure.injector # no remove this dependecy
-from infrastructure.controllers import (
-    enroll_player_controller,
-    start_game_controller,
-    status_controller,
-    deal_card_controller,
-    stand_controller,
-    croupier_controller,
-    login_controller,
+import shared.injector # no remove this dependecy
+from api_gateway.infrastructure.controllers import (
+    create_game_controller,
     sign_up_controller,
-    create_game_controller
+    start_game_controller,
+    deal_card_controller,
+    login_controller,
+    stand_controller,
+    enroll_player_controller,
+    status_controller,
+    croupier_controller,
 )
 
 app = FastAPI()
