@@ -1,6 +1,6 @@
-from game_service.application.exceptions import IncorrectGameID, GameFinishedError
-from game_service.application.start_game_service import StartGameService
 from fastapi import APIRouter, HTTPException
+from game_management_service.application.start_game_service import StartGameService
+from game_management_service.infrastructure.repositories.exceptions import IncorrectGameID
 from game_service.domain.game import NoPlayersEnrolled, GameAlreadyStarted
 
 router = APIRouter()
@@ -22,9 +22,5 @@ def start_game(game_id: str):
     except GameAlreadyStarted:
         raise HTTPException(
             status_code=400, detail='Game already started'
-        )
-    except GameFinishedError:
-        raise HTTPException(
-            status_code=400, detail='The game_id entered is finished'
         )
     return {'message': "Game started"}

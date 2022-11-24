@@ -1,10 +1,10 @@
 from pydantic import BaseModel
 from fastapi import APIRouter, HTTPException, Depends
-from game_service.application.enroll_player_service import EnrollPlayerService
-from game_service.application.exceptions import IncorrectGameID, GameFinishedError
-from game_service.domain.game import IncorrectPlayersQuantity, CantEnrollPlayersStartedGame, AlreadyEnrolledPlayer
 from api_gateway.domain.user import User
 from api_gateway.infrastructure.authentication.fast_api_authentication import authenticate_with_token
+from game_management_service.application.enroll_player_service import EnrollPlayerService
+from game_management_service.domain.exceptions import CantEnrollPlayersStartedGame, AlreadyEnrolledPlayer
+from game_management_service.infrastructure.repositories.exceptions import IncorrectGameID
 
 enroll_player_service = EnrollPlayerService()
 router = APIRouter()
@@ -25,17 +25,9 @@ async def enroll_player(game_id: str, current_user: User = Depends(authenticate_
             name=str(current_user.username),
             player_id=str(player_id)
         )
-    except IncorrectPlayersQuantity:
-        raise HTTPException(
-            status_code=400, detail='Only 3 players be allowed to play'
-        )
     except IncorrectGameID:
         raise HTTPException(
             status_code=404, detail='game_id not found',
-        )
-    except GameFinishedError:
-        raise HTTPException(
-            status_code=400, detail='The game_id entered is finished',
         )
     except CantEnrollPlayersStartedGame:
         raise HTTPException(
