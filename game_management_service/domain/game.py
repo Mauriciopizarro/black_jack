@@ -32,5 +32,6 @@ class Game(BaseModel):
 
     def dict(self, *arg, **kwargs):
         game_dict = super(Game, self).dict()
-        game_dict.pop("id")
+        if not self.id:
+            game_dict.pop("id")
         return game_dict

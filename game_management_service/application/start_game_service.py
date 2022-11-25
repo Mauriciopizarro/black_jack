@@ -1,6 +1,7 @@
 from dependency_injector.wiring import Provide, inject
 from game_management_service.domain.interfaces.game_repository import GameRepository
 from shared.injector import Injector
+from pubsub import pub
 
 
 class StartGameService:
@@ -13,3 +14,4 @@ class StartGameService:
         game = self.game_repository.get(game_id)
         game.start()
         self.game_repository.update(game)
+        pub.sendMessage('game_started', event=game.dict())
