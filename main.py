@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from pubsub import pub
 import shared.injector # no remove this dependecy
 from api_gateway.infrastructure.controllers import (
     create_game_controller,
@@ -11,6 +12,9 @@ from api_gateway.infrastructure.controllers import (
     status_controller,
     croupier_controller,
 )
+from game_service.infrastructure.listeners.game_started_listener import create_game
+
+pub.subscribe(create_game, 'game_started')
 
 app = FastAPI()
 

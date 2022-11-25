@@ -1,15 +1,15 @@
 from game_service.domain.card import Card
-from game_service.domain.player import Player
+from game_service.domain.player import Player, Croupier
 from game_service.application.exceptions import GameFinishedError
 from typing import Optional, List
 from pydantic import BaseModel
 
 
 class Game(BaseModel):
-    turn_order: List[Player]
+    turn_order: List[Player] = []
     deck: List[Card]
     game_status: str
-    turn_position: int
+    turn_position: int = 0
     game_id: Optional[str] = None
 
     @property
@@ -21,11 +21,6 @@ class Game(BaseModel):
     @property
     def croupier(self):
         return self.turn_order[-1]
-
-    def dict(self, *arg, **kwargs):
-        game_dict = super(Game, self).dict()
-        game_dict.pop("game_id")
-        return game_dict
 
     def get_cards(self, quantity_cards):
         cards = []
@@ -190,6 +185,17 @@ class Game(BaseModel):
             'croupier': self.croupier.get_status()
         }
         return player_status_json
+
+    def add_players(self, players: List):
+        croupier = Croupier(name="Croupier", cards=[], status="waiting_turn", has_hidden_card=True)
+        self.turn_order = [croupier]
+        for player in players:
+            self.turn_order.insert(0, player)
+
+    def deal_initial_cards(self):
+        for player in self.turn_order:
+            player.receive_cards(self.get_cards(2))
+        self.turn_order[0].set_as_playing()
 
 
 class NotStartedGame(Exception):

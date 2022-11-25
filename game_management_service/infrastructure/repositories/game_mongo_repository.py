@@ -43,7 +43,9 @@ class GameMongoRepository(GameRepository):
         return Game(status=game.status, players=game.players, id=str(db_game.inserted_id), admin=game.admin)
 
     def update(self, game: Game) -> Game:
-        self.db.find_one_and_update({"_id": ObjectId(game.id)}, {"$set": game.dict()})
+        game_dict = game.dict()
+        game_dict.pop("id")
+        self.db.find_one_and_update({"_id": ObjectId(game.id)}, {"$set": game_dict})
         return Game(status=game.status, players=game.players, id=game.id, admin=game.admin)
 
     @staticmethod

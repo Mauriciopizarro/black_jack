@@ -45,11 +45,16 @@ class GameMongoRepository(GameRepository):
         return game
 
     def save(self, game: Game) -> Game:
-        db_game = self.db.insert_one(game.dict())
-        return Game(turn_order=game.turn_order, deck=game.deck, game_status=game.game_status, turn_position=game.turn_position, game_id=str(db_game.inserted_id))
+        game_dict = game.dict()
+        game_dict["_id"] = ObjectId(game.game_id)
+        game_dict.pop("game_id")
+        self.db.insert_one(game_dict)
+        return Game(turn_order=game.turn_order, deck=game.deck, game_status=game.game_status, turn_position=game.turn_position, game_id=game.game_id)
 
     def update(self, game: Game) -> Game:
-        self.db.find_one_and_update({"_id": ObjectId(game.game_id)}, {"$set": game.dict()})
+        game_dict = game.dict()
+        game_dict.pop("game_id")
+        self.db.find_one_and_update({"_id": ObjectId(game.game_id)}, {"$set": game_dict})
         return Game(turn_order=game.turn_order, deck=game.deck, game_status=game.game_status, turn_position=game.turn_position, game_id=game.game_id)
 
     def get_player_object(self, player_dict, is_croupier):
