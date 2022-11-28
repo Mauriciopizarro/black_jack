@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from game_service.application.croupier_service import CroupierService
 from game_service.application.exceptions import IncorrectGameID, GameFinishedError
-from game_service.domain.game import NotCroupierTurnError, NotStartedGame
+from game_service.domain.game import NotCroupierTurnError
 
 croupier_service = CroupierService()
 router = APIRouter()
@@ -22,9 +22,5 @@ async def croupier_controller(game_id: str):
     except GameFinishedError:
         raise HTTPException(
             status_code=400, detail='The game_id entered is finished',
-        )
-    except NotStartedGame:
-        raise HTTPException(
-            status_code=400, detail='Game not started',
         )
     return {'message': "Croupier is playing"}

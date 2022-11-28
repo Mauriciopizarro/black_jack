@@ -1,8 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional, List
-
 from game_management_service.domain.exceptions import CantEnrollPlayersStartedGame, AlreadyEnrolledPlayer, \
-    GameAlreadyStarted
+    IncorrectAdminId, GameAlreadyStarted
 from game_management_service.domain.player import Player
 
 
@@ -23,7 +22,10 @@ class Game(BaseModel):
 
         self.players.append(player)
 
-    def start(self):
+    def start(self, user_id):
+
+        if self.admin.user_id != user_id:
+            raise IncorrectAdminId()
 
         if self.status == "started":
             raise GameAlreadyStarted()

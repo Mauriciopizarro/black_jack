@@ -1,4 +1,6 @@
 from dependency_injector.wiring import Provide, inject
+from fastapi import HTTPException
+
 from api_gateway.domain.interfaces.auth_provider import AuthProvider
 from api_gateway.domain.user import User, UserInDB
 from shared.injector import Injector
@@ -30,7 +32,3 @@ class TokenService:
         user_data = auth_provider.get_user_data(token)
         user = user_repository.get_by_username(username=user_data["username"])
         return user
-
-
-class InvalidTokenError(Exception):
-    pass

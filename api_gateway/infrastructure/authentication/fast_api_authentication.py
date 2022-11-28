@@ -1,7 +1,8 @@
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
-from api_gateway.application.token_service import TokenService, InvalidTokenError
+from api_gateway.application.token_service import TokenService
 from api_gateway.domain.user import UserInDB
+from api_gateway.infrastructure.authentication.exceptions import InvalidTokenError
 from api_gateway.infrastructure.repositories.user.user_pyson_repository import NotExistentUser
 
 

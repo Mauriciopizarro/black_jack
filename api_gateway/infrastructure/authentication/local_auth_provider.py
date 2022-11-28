@@ -1,6 +1,7 @@
 from typing import Dict
 from jose import jwt, JWTError
 from api_gateway.domain.interfaces.auth_provider import AuthProvider
+from api_gateway.infrastructure.authentication.exceptions import InvalidTokenError
 
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
@@ -18,7 +19,3 @@ class LocalAuthProvider(AuthProvider):
         except JWTError:
             raise InvalidTokenError()
         return {"username": username}
-
-
-class InvalidTokenError(Exception):
-    pass

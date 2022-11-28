@@ -3,7 +3,7 @@ from dependency_injector.wiring import Provide, inject
 from shared.injector import Injector
 from game_service.domain.card import As, LetterCard, NumberCard
 from game_service.domain.game import Game
-from game_service.domain.player import Croupier, Player
+from game_service.domain.player import Player
 from game_service.domain.interfaces.game_repository import GameRepository
 
 
@@ -13,14 +13,7 @@ class CreateGameService:
     def __init__(self, game_repository: GameRepository = Provide[Injector.game_repo]):
         self.game_repository = game_repository
 
-    def create_game(self):
-        croupier = Croupier(name="Croupier", cards=[], status="waiting_turn", has_hidden_card=True)
-        turn_order = [croupier]
-        game = Game(turn_order=turn_order, deck=self.create_deck(), game_status="created", turn_position=0)
-        response_game = self.game_repository.save(game)
-        return response_game
-
-    def create_game_2(self, players, game_id):
+    def create_game(self, players, game_id):
         game = Game(deck=self.create_deck(), game_status="started", game_id=game_id)
         player_list = []
         for player in players:
