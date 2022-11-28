@@ -1,6 +1,6 @@
 from game_service.application.exceptions import IncorrectGameID, GameFinishedError
 from game_service.application.stand_service import StandService
-from game_service.domain.game import IncorrectPlayerTurn, NotStartedGame
+from game_service.domain.game import IncorrectPlayerTurn
 from api_gateway.domain.user import User
 from fastapi import APIRouter, HTTPException, Depends
 from api_gateway.infrastructure.authentication.fast_api_authentication import authenticate_with_token
@@ -24,9 +24,5 @@ async def stand_controller(game_id: str, current_user: User = Depends(authentica
     except IncorrectPlayerTurn:
         raise HTTPException(
             status_code=400, detail='Is not a turn to player entered',
-        )
-    except NotStartedGame:
-        raise HTTPException(
-            status_code=400, detail='The game is not started',
         )
     return {'message': "Player stand"}

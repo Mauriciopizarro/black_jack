@@ -35,22 +35,6 @@ class Game(BaseModel):
         player = self.turn_order[self.turn_position]
         player.set_as_playing()
 
-    def enroll_player(self, player):
-        if self.game_status == "finished":
-            raise GameFinishedError()
-        if self.game_status != "created":
-            raise CantEnrollPlayersStartedGame()
-
-        list_of_ids = [str(saved_player.player_id) for saved_player in self.players]
-
-        if str(player.player_id) in list_of_ids:
-            raise AlreadyEnrolledPlayer()
-
-        if len(self.players) >= 3:
-            raise IncorrectPlayersQuantity()
-
-        self.turn_order.insert(0, player)
-
     def all_players_over_the_limit(self):
         for player in self.players:
             if not player.is_over_21_points():
@@ -96,22 +80,6 @@ class Game(BaseModel):
         player = self.turn_order[self.turn_position]
         return str(player.player_id)
 
-    def start(self):
-        if self.game_status == "finished":
-            raise GameFinishedError()
-
-        if len(self.players) == 0:
-            raise NoPlayersEnrolled()
-
-        if self.game_status == "started":
-            raise GameAlreadyStarted()
-
-        for player in self.turn_order:
-            player.receive_cards(self.get_cards(2))
-
-        self.game_status = "started"
-        self.turn_order[0].set_as_playing()
-
     def is_player_turn(self, player_id):
         return str(player_id) == self.get_playerId_of_current_turn()
 
@@ -119,9 +87,6 @@ class Game(BaseModel):
 
         if self.game_status == "finished":
             raise GameFinishedError()
-
-        if self.game_status != "started":
-            raise NotStartedGame()
 
         if not self.is_player_turn(player_id):
             raise IncorrectPlayerTurn()
@@ -138,9 +103,6 @@ class Game(BaseModel):
     def stand_current_turn_player(self, player_id):
         if self.game_status == "finished":
             raise GameFinishedError()
-
-        if self.game_status != "started":
-            raise NotStartedGame()
 
         if not self.is_player_turn(player_id):
             raise IncorrectPlayerTurn()
@@ -161,8 +123,6 @@ class Game(BaseModel):
     def croupier_play(self):
         if self.game_status == "finished":
             raise GameFinishedError()
-        if self.game_status != "started":
-            raise NotStartedGame()
         current_player_id = self.get_playerId_of_current_turn()
         if not current_player_id == str(self.croupier.player_id):
             raise NotCroupierTurnError()
@@ -172,8 +132,6 @@ class Game(BaseModel):
             self.croupier.receive_cards(self.get_cards(1))
 
     def get_status(self):
-        if self.game_status == "created":
-            raise NotStartedGame()
         players_status_list = []
         for player in self.players:
             players_status_list.append(player.get_status())
@@ -198,33 +156,9 @@ class Game(BaseModel):
         self.turn_order[0].set_as_playing()
 
 
-class NotStartedGame(Exception):
-    pass
-
-
-class IncorrectPlayersQuantity(Exception):
-    pass
-
-
 class NotCroupierTurnError(Exception):
     pass
 
 
-class NoPlayersEnrolled(Exception):
-    pass
-
-
-class GameAlreadyStarted(Exception):
-    pass
-
-
-class AlreadyEnrolledPlayer(Exception):
-    pass
-
-
 class IncorrectPlayerTurn(Exception):
-    pass
-
-
-class CantEnrollPlayersStartedGame(Exception):
     pass

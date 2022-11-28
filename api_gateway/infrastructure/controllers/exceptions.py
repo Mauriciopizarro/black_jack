@@ -1,0 +1,2 @@
+class IncorrectGameID(Exception):
+    pass
